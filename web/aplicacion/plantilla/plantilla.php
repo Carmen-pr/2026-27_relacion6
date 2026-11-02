@@ -75,7 +75,8 @@ function inicioCuerpo(string $cabecera, array $ubicacion=[])
                     <!-- <li><a href="/aplicacion/pruebas/index.php">Ejemplos Basicos</a></li> -->
                     <li><a href="/aplicacion/Relacion1/relacion1.php">Relación 1</a></li>
                     <li><a href="/aplicacion/Relacion2/index.php">Relación 2</a></li>
-                    <li><a href="/aplicacion/relacion3/index.php">Relación 3</a></li>
+                    <li><a href="/aplicacion/Relacion3/index.php">Relación 3</a></li>
+                    <li><a href="/aplicacion/Relacion4/index.php">Relación 4</a></li>
                     
                  </ul> 
                 

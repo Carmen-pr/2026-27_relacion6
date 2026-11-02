@@ -5,9 +5,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/cabecera.php';
 
 function obtenerDatos(): array
 {
+    // El controlador guarda los resultados y los errores de cada prueba.
     $resultados = [];
     $errores = [];
 
+    // Ejecuta cada prueba por separado para que un error no detenga las demás.
     $probar = static function (string $titulo, callable $prueba) use (&$resultados, &$errores): void {
         try {
             $resultados[$titulo] = (string) $prueba();
@@ -16,7 +18,11 @@ function obtenerDatos(): array
         }
     };
 
+    /**
+     *  EJERCICIO 1: creación, modificación, clonación y métodos de Flauta
+     */
     $probar('Instrumento y fábrica', static function (): string {
+        // InstrumentoBase es abstracta: se ejercita mediante la clase concreta Flauta.
         $flauta = Flauta::CrearDesdeArray(['material' => 'bambú', 'edad' => 7]);
         $flauta->setDescripcion('Flauta de concierto');
         $flauta->envejecer();
@@ -24,6 +30,8 @@ function obtenerDatos(): array
 
         return implode(' | ', [
             (string) $flauta,
+            'Descripción: ' . $flauta->getDescripcion(),
+            'Edad: ' . $flauta->getEdad(),
             $flauta->sonido(),
             $flauta->afinar(),
             $flauta->metodoFabricacion(),
@@ -32,6 +40,9 @@ function obtenerDatos(): array
         ]);
     });
 
+    /**
+     *  EJERCICIO 2: acceso a una propiedad que no existe
+     */
     $probar('Acceso a una propiedad inexistente', static function (): string {
         $flauta = Flauta::CrearDesdeArray([]);
 
@@ -42,6 +53,9 @@ function obtenerDatos(): array
         }
     });
 
+    /**
+     *  EJERCICIO 3: intento de asignación a una propiedad no permitida
+     */
     $probar('Asignación no permitida', static function (): string {
         $flauta = Flauta::CrearDesdeArray([]);
 
@@ -54,6 +68,31 @@ function obtenerDatos(): array
         return 'No se lanzó la excepción esperada.';
     });
 
+    /**
+     *  EJERCICIO 4: validación de los datos opcionales de la fábrica
+     */
+    $probar('Validación de datos de Flauta', static function (): string {
+        $casosInvalidos = [
+            ['material' => '', 'edad' => 3],
+            ['material' => 'metal', 'edad' => -1],
+            ['material' => 'madera', 'edad' => 'quince'],
+        ];
+        $mensajes = [];
+
+        foreach ($casosInvalidos as $datos) {
+            try {
+                Flauta::CrearDesdeArray($datos);
+            } catch (InvalidArgumentException $error) {
+                $mensajes[] = $error->getMessage();
+            }
+        }
+
+        return implode(' | ', $mensajes);
+    });
+
+    /**
+     *  EJERCICIO 5: propiedades dinámicas, isset y recorrido del objeto
+     */
     $probar('Propiedad dinámica y recorrido', static function (): string {
         $objeto = new ClaseMisPropiedades();
         $objeto->propiedad1 = 'valor uno';
@@ -70,6 +109,9 @@ function obtenerDatos(): array
             . ' | ' . implode(', ', $elementos);
     });
 
+    /**
+     *  EJERCICIO 6: protección del valor de una propiedad privada
+     */
     $probar('Protección de la propiedad privada', static function (): string {
         $objeto = new ClaseMisPropiedades();
 
@@ -83,6 +125,9 @@ function obtenerDatos(): array
         return 'No se lanzó la excepción esperada.';
     });
 
+    /**
+     *  EJERCICIO 7: lectura de una propiedad dinámica no asignada
+     */
     $probar('Excepción al leer propiedad dinámica inexistente', static function (): string {
         $objeto = new ClaseMisPropiedades();
 
@@ -93,6 +138,9 @@ function obtenerDatos(): array
         }
     });
 
+    /**
+     *  EJERCICIO 8: obtención de los casos de la enumeración EstadoCivil
+     */
     $probar('Enumeración EstadoCivil', static function (): string {
         $valores = array_map(
             static fn (EstadoCivil $estado): string => $estado->descripcion() . '=' . $estado->valor(),
@@ -102,6 +150,9 @@ function obtenerDatos(): array
         return implode(', ', $valores);
     });
 
+    /**
+     *  EJERCICIO 9: registro de una persona con un estado civil aleatorio
+     */
     $probar('Registro de persona', static function (): string {
         $valoresEstado = array_map(
             static fn (EstadoCivil $estado): int => $estado->valor(),
@@ -121,6 +172,9 @@ function obtenerDatos(): array
         return (string) $persona . ' | Estado asignado desde el valor aleatorio ' . $valorAleatorio;
     });
 
+    /**
+     *  EJERCICIO 10: validación de una fecha de nacimiento incorrecta
+     */
     $probar('Validación de fecha', static function (): string {
         try {
             Persona::registrarPersona(
@@ -137,6 +191,30 @@ function obtenerDatos(): array
         return 'No se lanzó la excepción esperada.';
     });
 
+    /**
+     *  EJERCICIO 11: rechazo de un texto vacío en un setter
+     */
+    $probar('Validación de texto de Persona', static function (): string {
+        $persona = Persona::registrarPersona(
+            'Persona de prueba',
+            '15/08/2001',
+            'Calle Mayor',
+            'Málaga',
+            EstadoCivil::Soltero
+        );
+
+        try {
+            $persona->setNombre('   ');
+        } catch (InvalidArgumentException $error) {
+            return 'Excepción controlada: ' . $error->getMessage();
+        }
+
+        return 'No se lanzó la excepción esperada.';
+    });
+
+    /**
+     *  EJERCICIO 12: comprobación mediante reflexión del constructor privado
+     */
     $probar('Constructor privado de Persona', static function (): string {
         $constructor = (new ReflectionClass(Persona::class))->getConstructor();
 
@@ -147,6 +225,9 @@ function obtenerDatos(): array
         return 'Constructor privado verificado mediante reflexión.';
     });
 
+    /**
+     *  EJERCICIO 13: recorrido de la serie Fibonacci con un iterador
+     */
     $probar('Iterador SerieFibonacci(10)', static function (): string {
         $serie = new SerieFibonacci(10);
         $valores = [];
@@ -158,6 +239,9 @@ function obtenerDatos(): array
         return implode(' ', $valores);
     });
 
+    /**
+     *  EJERCICIO 14: generación de la serie Fibonacci con un generador
+     */
     $probar('Generador Fibonacci', static function (): string {
         $valores = [];
         foreach (SerieFibonacci::fFibonacci(10) as $valor) {
@@ -167,9 +251,25 @@ function obtenerDatos(): array
         return implode(' ', $valores);
     });
 
+    /**
+     *  EJERCICIO 15: rechazo de un límite Fibonacci negativo
+     */
     $probar('Límite Fibonacci no válido', static function (): string {
         try {
             new SerieFibonacci(-1);
+        } catch (InvalidArgumentException $error) {
+            return 'Excepción controlada: ' . $error->getMessage();
+        }
+
+        return 'No se lanzó la excepción esperada.';
+    });
+
+    /**
+     *  EJERCICIO 16: rechazo de un índice negativo en el generador
+     */
+    $probar('Índice no válido en el generador Fibonacci', static function (): string {
+        try {
+            SerieFibonacci::fFibonacci(-1);
         } catch (InvalidArgumentException $error) {
             return 'Excepción controlada: ' . $error->getMessage();
         }
@@ -182,6 +282,7 @@ function obtenerDatos(): array
 
 function mostrarDatos(array $datos): void
 {
+    // Vista: muestra cada resultado escapado para evitar interpretar su contenido como HTML.
     echo '<main>';
 
     foreach ($datos['resultados'] as $titulo => $resultado) {
@@ -191,6 +292,7 @@ function mostrarDatos(array $datos): void
         echo '</section>';
     }
 
+    // Los errores inesperados se presentan aparte de los resultados correctos.
     if ($datos['errores'] !== []) {
         echo '<section><h2>Errores no previstos</h2><ul>';
         foreach ($datos['errores'] as $error) {
@@ -199,11 +301,13 @@ function mostrarDatos(array $datos): void
         echo '</ul></section>';
     }
 
+    echo '<p><a href="/aplicacion/Relacion3/index.php">Volver a la Relación 3</a></p>';
     echo '</main>';
 }
 
 function ejecutarPagina(): void
 {
+    // Configura la ruta de navegación y monta la plantilla común de la página.
     $ubicacion = [
         ['TEXTO' => 'Inicio', 'ENLACE' => '/index.php'],
         ['TEXTO' => 'Relación 4'],

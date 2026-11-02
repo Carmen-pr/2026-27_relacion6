@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 class SerieFibonacci implements Iterator
 {
+    // El límite es inclusivo: con 10 se generan los índices de 0 a 10.
     private int $_limite;
     private int $_claveActual = 0;
 
@@ -15,31 +16,37 @@ class SerieFibonacci implements Iterator
         $this->_limite = $limite;
     }
 
+    // Iterator: calcula el valor correspondiente al índice actual.
     public function current(): int
     {
         return self::calcularFibonacci($this->_claveActual);
     }
 
+    // Iterator: usa el índice de la serie como clave.
     public function key(): mixed
     {
         return $this->_claveActual;
     }
 
+    // Iterator: avanza al siguiente índice.
     public function next(): void
     {
         $this->_claveActual++;
     }
 
+    // Iterator: reinicia el recorrido para poder iterar otra vez.
     public function rewind(): void
     {
         $this->_claveActual = 0;
     }
 
+    // El límite es inclusivo, por lo que también se genera F(límite).
     public function valid(): bool
     {
         return $this->_claveActual <= $this->_limite;
     }
 
+    // Genera los valores desde F(0) hasta F(último) sin almacenar la serie completa.
     public static function fFibonacci(int $ultimo): Generator
     {
         if ($ultimo < 0) {
@@ -71,6 +78,7 @@ class SerieFibonacci implements Iterator
         throw new Exception("No existe la propiedad $nombre");
     }
 
+    // Aplica la fórmula de Binet y redondea para compensar los errores de coma flotante.
     private static function calcularFibonacci(int $indice): int
     {
         $raizCinco = sqrt(5);
