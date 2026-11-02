@@ -28,7 +28,7 @@ class ClaseMisPropiedades implements IteratorAggregate
     public function __get(string $nombre): mixed
     {
         if ($nombre === '_propPrivada') {
-            return $this->_propPrivada;
+            throw new Exception("No se puede acceder a la propiedad $nombre");
         }
 
         if (!array_key_exists($nombre, $this->_propiedades)) {
@@ -42,7 +42,7 @@ class ClaseMisPropiedades implements IteratorAggregate
     public function __isset(string $nombre): bool
     {
         if ($nombre === '_propPrivada') {
-            return isset($this->_propPrivada);
+            return false;
         }
 
         return isset($this->_propiedades[$nombre]);
@@ -66,8 +66,8 @@ class ClaseMisPropiedades implements IteratorAggregate
             $elementos['oi_' . $nombre] = $valor;
         }
 
-        $elementos['propPublica'] = $this->propPublica;
-        $elementos['_propPrivada'] = $this->_propPrivada;
+        $elementos['oi_propPublica'] = $this->propPublica;
+        $elementos['oi__propPrivada'] = $this->_propPrivada;
 
         return new ArrayIterator($elementos);
     }

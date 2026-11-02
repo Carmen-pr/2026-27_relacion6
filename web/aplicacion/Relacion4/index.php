@@ -118,8 +118,9 @@ function obtenerDatos(): array
         try {
             $objeto->_propPrivada = 99;
         } catch (Exception $error) {
+            $elementos = iterator_to_array($objeto->getIterator());
             return 'Excepción controlada: ' . $error->getMessage()
-                . ' | valor conservado: ' . $objeto->_propPrivada;
+                . ' | valor conservado: ' . $elementos['oi__propPrivada'];
         }
 
         return 'No se lanzó la excepción esperada.';
@@ -169,7 +170,7 @@ function obtenerDatos(): array
             $estadoAleatorio
         );
 
-        return (string) $persona . ' | Estado asignado desde el valor aleatorio ' . $valorAleatorio;
+        return $persona->toString() . ' | Estado asignado desde el valor aleatorio ' . $valorAleatorio;
     });
 
     /**

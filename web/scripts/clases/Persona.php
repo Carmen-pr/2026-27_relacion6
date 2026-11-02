@@ -99,7 +99,7 @@ class Persona
     }
 
     // Representación legible de la persona según el formato solicitado.
-    public function __toString(): string
+    public function toString(): string
     {
         return "{$this->_nombre} es una persona {$this->_estado->descripcion()} "
             . "nacida en {$this->_fecha_nacimiento} y que vive en {$this->_localidad}";
