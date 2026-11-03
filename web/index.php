@@ -39,7 +39,9 @@ function cabecera()
 function cuerpo()
 {
 ?>
-    <br><br>
-   <a href="./aplicacion/pruebas/index.php">Acceso a pruebas</a>
+    <!-- Contenedor que aplica el diseño de botón moderno -->
+    <div class="lista-ejercicios">
+        <a href="./aplicacion/pruebas/index.php">Acceso a pruebas</a>
+    </div>
 <?php
 }

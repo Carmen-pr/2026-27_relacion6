@@ -24,24 +24,24 @@ finCuerpo();
 
 //vista
 function cabecera() {}
+
 //vista
 function cuerpo()
 {
 ?>
-    <br><br>
-    <h2 class="subtitulo-seccion">Elemento de pruebas</h2>
-    <br><br>
+    <div id="documento">
+        <h2 class="subtitulo-seccion">Elemento de pruebas</h2>
 
-    <div class="lista-ejercicios">
-        <a href="basicas.php">Funcionamiento básico</a>
-        <a href="pasopar.php">Trabajo comunicacion controlador-vista</a>
-        <a href="array.php">Arrays</a>
-        <a href="cadenas.php">Cadenas</a>
-        <a href="expresiones_regulares.php">Expresiones Regulares</a>
-        <a href="index_funciones.php">Funciones</a>
-        <a href="clases.php">Clases</a>
-        <a href="pagformulario.php">Paginas Formularios</a>
+        <div class="lista-ejercicios">
+            <a href="basicas.php">Funcionamiento básico</a>
+            <a href="pasopar.php">Trabajo comunicacion controlador-vista</a>
+            <a href="array.php">Arrays</a>
+            <a href="cadenas.php">Cadenas</a>
+            <a href="expresiones_regulares.php">Expresiones Regulares</a>
+            <a href="index_funciones.php">Funciones</a>
+            <a href="clases.php">Clases</a>
+            <a href="pagformulario.php">Paginas Formularios</a>
+        </div>
     </div>
-
 <?php
 }

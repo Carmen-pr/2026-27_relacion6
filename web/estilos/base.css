@@ -60,7 +60,7 @@ header {
 }
 
 
-/* --- 4. BARRA DE MENÚ SUPERIOR (ESTILO PESTAÑAS / TABS) --- */
+/* --- 4. BARRA DE MENÚ SUPERIOR Y UBICACIÓN --- */
 #barraMenu ul {
     list-style-type: none;
     margin: 20px 0 10px 0;                      /* Márgenes exteriores */
@@ -98,9 +98,31 @@ header {
     border-color: #777BB4;
 }
 
+/* ESTILOS MODIFICADOS: Barra de ubicación (Migas de pan / Breadcrumbs) */
 #barraUbicacion {
     background-color: #F1F5F9;                  /* Fondo claro para la barra de migas de pan */
-    color: #0F172A;                             /* Texto oscuro */
+    color: #4F46E5;                             /* Texto base en color índigo */
+    padding: 8px 16px;                          /* Espaciado interno para darle altura y aire */
+    border-radius: 6px;                         /* Esquinas redondeadas suaves */
+    font-size: 0.95em;                          /* Tamaño de fuente equilibrado */
+    margin-bottom: 20px;                        /* Separación con el contenido inferior */
+    display: inline-block;                      /* Ajuste de contenedor al contenido */
+}
+
+/* Estilo para los enlaces de navegación dentro de la ubicación */
+#barraUbicacion a {
+    color: #4F46E5;                             /* Mantiene el tono índigo vibrante */
+    font-weight: 500;
+}
+
+#barraUbicacion a:hover {
+    text-decoration: underline;                 /* Subrayado sutil al pasar el cursor */
+}
+
+/* Estilo para el separador interactivo entre apartados */
+#barraUbicacion .separador {
+    color: #94A3B8;                             /* Gris claro para el elemento divisorio */
+    margin: 0 8px;                              /* Separación horizontal simétrica */
 }
 
 /* Limpieza de selectores generales de navegación */

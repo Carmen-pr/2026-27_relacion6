@@ -2,6 +2,20 @@
 include_once(dirname(__FILE__) . "/../../cabecera.php");
 //controlador
 
+$barra = [
+    [
+        "TEXTO" => "inicio",
+        "ENLACE" => "/index.php",
+    ],
+    [
+        "TEXTO" => "pruebas",
+        "ENLACE" => "./index.php" // Permite volver a la carpeta pruebas
+    ],
+    [
+        "TEXTO" => "expresiones regulares"
+    ]
+];
+
 $cadena='tienes 258 34 años';
 
 //Buscar años
@@ -58,7 +72,7 @@ preg_match($exp,$cadena,$resultado,PREG_OFFSET_CAPTURE);
 inicioCabecera("APLICACION PRIMER TRIMESTRE");
 cabecera();
 finCabecera();
-inicioCuerpo("Expresiones Regulares");
+inicioCuerpo("Expresiones Regulares", $barra); // Cambiado para incluir el array de navegación
 cuerpo(); //llamo a la vista
 finCuerpo();
 // **********************************************************

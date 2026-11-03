@@ -12,11 +12,11 @@ include_once ("./mis_funciones.php");
 $barra=[
      [
        "TEXTO"=> "inicio",
-       "LINK" =>"/index.php",
+       "ENLACE" =>"/index.php", // Cambiado LINK por ENLACE
      ],
        [ 
        "TEXTO"=> "pruebas",   
-       "LINK" =>"/aplicacion/pruebas/index.php",
+       "ENLACE" =>"./index.php", // Cambiado LINK por ENLACE y puesto en ruta relativa
      ], 
        [ 
        "TEXTO"=> "eje. funciones",   

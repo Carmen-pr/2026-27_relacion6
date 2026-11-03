@@ -4,11 +4,25 @@ define("NUME" ,25);
 const NUME1=56;
 
 //controlador
+$barra = [
+    [
+        "TEXTO" => "inicio",
+        "ENLACE" => "/index.php",
+    ],
+    [
+        "TEXTO" => "pruebas",
+        "ENLACE" => "./index.php" // Permite volver a la carpeta pruebas
+    ],
+    [
+        "TEXTO" => "eje.basicos"
+    ]
+];
+
 //dibuja la plantilla de la vista
 inicioCabecera("APLICACION PRIMER TRIMESTRE");
 cabecera();
 finCabecera();
-inicioCuerpo("pruebas basicas", []);
+inicioCuerpo("pruebas basicas", $barra); // Cambiado el array vacío por $barra
 cuerpo(); //llamo a la vista
 finCuerpo();
 // **********************************************************

@@ -5,11 +5,11 @@ include_once(dirname(__FILE__) . "/../../cabecera.php");
 $barra=[
      [
        "TEXTO"=> "inicio",
-       "LINK" =>"/index.php",
+       "ENLACE" =>"/index.php", // Cambiado LINK por ENLACE
      ],
       [ 
        "TEXTO"=> "pruebas",   
-       "LINK" =>"/aplicacion/pruebas/index.php",
+       "ENLACE" =>"./index.php", // Cambiado LINK por ENLACE y ruta relativa
      ], 
        [ 
        "TEXTO"=> "clases"  
@@ -49,53 +49,6 @@ $segunda=Unica::crear(300);
 
 
 $ins=new Instituto();
-
-
-$clase1=new Clasenormal();
-$clase2=new Clasenormal();
-
-$clase1->$cadena="hola mundo";
-
-$cad="";
-//if (isset($clase1->cadena))
-//    $cad=$clase1->cadena;
-
-//if (isset($clase2->cadena))
-//    $cad=$clase2->cadena;
-
-
-//clase sin sobrecarga
-$clase1=new ClaseSinsobrecargar();
-
-//$clase1->cadena="adios";
-//$cad=$clase1->cadena;
-if (isset($clase1->cadena))
-    $cad=$clase1->cadena;
-
-//clase sin sobrecarga
-$clase1=new ClaseSobrecargada();
-
-$val=$clase1->moreno;
-$val=$clase1->marcha;
-$val=$clase1->numero;
-$val=$clase1->hora;
-//$val=$clase1->hora; error
-
-$clase1->marcha=$val;
-$clase1->numero=$val+10;
-$clase1->hora=$val;
-
-//uso clase Dinamica que guarda las nuevas propiedades en un array privado
-$clase1=new ClaseDinamica;
-$clase2=new ClaseDinamica;
-
-$clase1->nombre="vicente";
-
-$cadena=$clase1->nombre;
-
-$clase1->varPublica=20;
-if (isset($clase2->nombre));
-    $cadena=$clase2;
 
 
 
