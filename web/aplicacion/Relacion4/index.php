@@ -4,8 +4,7 @@ declare(strict_types=1);
 require_once $_SERVER['DOCUMENT_ROOT'] . '/cabecera.php';
 
 function obtenerDatos(): array
-{
-    // El controlador guarda los resultados y los errores de cada prueba.
+{    // El controlador guarda los resultados y los errores de cada prueba.
     $resultados = [];
     $errores = [];
 
@@ -301,8 +300,6 @@ function mostrarDatos(array $datos): void
         }
         echo '</ul></section>';
     }
-
-    echo '<p><a href="/aplicacion/Relacion3/index.php">Volver a la Relación 3</a></p>';
     echo '</main>';
 }
 

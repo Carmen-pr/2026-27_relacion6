@@ -63,39 +63,46 @@ header {
 /* --- 4. BARRA DE MENÚ SUPERIOR Y UBICACIÓN --- */
 #barraMenu ul {
     list-style-type: none;
-    margin: 20px 0 10px 0;                      /* Márgenes exteriores */
-    padding: 0;
+    margin: 20px 0 10px 0;
+    padding: 8px 8px 0;
     display: flex;
-    gap: 12px;                                  /* Separación entre pestañas */
-    flex-wrap: wrap;                            /* Se adapta si la pantalla se estrecha */
+    align-items: flex-end;
+    gap: 4px;
+    flex-wrap: wrap;
+    background-color: #E2E8F0;
+    border-bottom: 1px solid #CBD5E1;
+    border-radius: 8px 8px 0 0;
 }
 
-/* Estilo base de cada pestaña del menú */
+/* Las opciones del menú tienen aspecto de pestañas del navegador. */
 #barraMenu a {
     text-decoration: none;
     display: inline-block;
-    padding: 8px 16px;
-    background-color: #F1F5F9;                  /* Fondo gris suave pasivo */
-    color: #777BB4;                             /* Texto con el morado PHP */
+    padding: 9px 16px;
+    background-color: #D7DEE8;
+    color: #475569;
     font-weight: bold;
-    border-radius: 6px;                         /* Esquinas redondeadas */
-    border: 1px solid #E2E8F0;                  /* Borde fino */
-    transition: all 0.2s ease;                  /* Animación de interacción fluida */
+    border: 1px solid #C5CEDA;
+    border-bottom: 0;
+    border-radius: 8px 8px 0 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Efecto al pasar el ratón por las pestañas */
-#barraMenu a:hover {
-    background-color: #777BB4;                  /* La pestaña se rellena de morado PHP */
-    color: white;                               /* Texto en blanco */
-    border-color: #777BB4;
-    transform: translateY(-1px);                 /* Sutil efecto de elevación */
+/* Al pasar el ratón, la pestaña se destaca como una pestaña seleccionable. */
+#barraMenu a:hover,
+#barraMenu a:focus-visible {
+    background-color: #FFFFFF;
+    color: #3730A3;
+    border-color: #A5B4FC;
 }
 
-/* Clase para la pestaña de la página activa (Opcional para usar desde PHP) */
+/* Estilo para marcar como activa la pestaña correspondiente a la página actual. */
 #barraMenu a.activa {
-    background-color: #777BB4;
-    color: white;
-    border-color: #777BB4;
+    position: relative;
+    background-color: #FFFFFF;
+    color: #3730A3;
+    border-color: #CBD5E1;
+    margin-bottom: -1px;
 }
 
 /* ESTILOS MODIFICADOS: Barra de ubicación (Migas de pan / Breadcrumbs) */
@@ -223,6 +230,59 @@ nav ul li {
 .tabla tr.par {
     background-color: #E0F2FE;                  /* Filas alternas en tono azul celeste */
     color: #0369A1;                             /* Texto azul oscuro legible */
+}
+
+.tabla-validaciones-contenedor {
+    max-width: 100%;
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+.tabla-validaciones {
+    width: 100%;
+    min-width: 780px;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #334155;
+    text-align: left;
+}
+
+.tabla-validaciones th,
+.tabla-validaciones td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #E2E8F0;
+    vertical-align: middle;
+}
+
+.tabla-validaciones th {
+    background-color: #EEF2FF;
+    color: #3730A3;
+    font-size: 0.95em;
+}
+
+.tabla-validaciones th:first-child {
+    border-radius: 8px 0 0 0;
+}
+
+.tabla-validaciones th:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+.tabla-validaciones tbody tr:nth-child(even) {
+    background-color: #F8FAFC;
+}
+
+.tabla-validaciones tbody tr:hover {
+    background-color: #EEF2FF;
+}
+
+.tabla-validaciones td:nth-child(2) {
+    min-width: 230px;
+}
+
+.tabla-validaciones td:nth-child(3),
+.tabla-validaciones td:nth-child(5) {
+    white-space: nowrap;
 }
 
 
