@@ -288,7 +288,11 @@ function mostrarDatos(array $datos): void
     foreach ($datos['resultados'] as $titulo => $resultado) {
         echo '<section>';
         echo '<h2>' . htmlspecialchars((string) $titulo, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</h2>';
-        echo '<p>' . htmlspecialchars((string) $resultado, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
+        $resultadoEscapado = htmlspecialchars((string) $resultado, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        if ($titulo === 'Instrumento y fábrica') {
+            $resultadoEscapado = str_replace(' | ', '<br>', $resultadoEscapado);
+        }
+        echo '<p>' . $resultadoEscapado . '</p>';
         echo '</section>';
     }
 

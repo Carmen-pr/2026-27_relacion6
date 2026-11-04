@@ -69,8 +69,8 @@ header {
     align-items: flex-end;
     gap: 4px;
     flex-wrap: wrap;
-    background-color: #E2E8F0;
-    border-bottom: 1px solid #CBD5E1;
+    background-color: #FFFFFF !important;        /* Forzamos el fondo de la barra a blanco puro */
+    border-bottom: 2px solid #777BB4;           /* Línea inferior morada para cerrar el menú */
     border-radius: 8px 8px 0 0;
 }
 
@@ -79,30 +79,30 @@ header {
     text-decoration: none;
     display: inline-block;
     padding: 9px 16px;
-    background-color: #D7DEE8;
-    color: #475569;
+    background-color: #FFFFFF !important;        /* Forzamos las pestañas inactivas a blanco puro */
+    color: #475569;                             /* Texto gris oscuro para buen contraste */
     font-weight: bold;
-    border: 1px solid #C5CEDA;
+    border: 1px solid #E2E8F0;                  /* Borde gris muy suave */
     border-bottom: 0;
     border-radius: 8px 8px 0 0;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Al pasar el ratón, la pestaña se destaca como una pestaña seleccionable. */
+/* Al pasar el ratón, la pestaña se destaca cambiando a fondo morado con texto blanco. */
 #barraMenu a:hover,
 #barraMenu a:focus-visible {
-    background-color: #FFFFFF;
-    color: #3730A3;
-    border-color: #A5B4FC;
+    background-color: #777BB4 !important;        /* Fondo morado PHP */
+    color: #FFFFFF !important;                  /* Texto en blanco */
+    border-color: #777BB4 !important;           /* Borde morado integrado */
 }
 
-/* Estilo para marcar como activa la pestaña correspondiente a la página actual. */
+/* Estilo para marcar como activa la pestaña correspondiente a la página actual (Click / Activa). */
 #barraMenu a.activa {
     position: relative;
-    background-color: #FFFFFF;
-    color: #3730A3;
-    border-color: #CBD5E1;
-    margin-bottom: -1px;
+    background-color: #777BB4 !important;        /* Fondo morado PHP */
+    color: #FFFFFF !important;                  /* Texto en blanco */
+    border-color: #777BB4 !important;
+    margin-bottom: -2px;                        /* Ajuste sutil para solapar el borde inferior */
 }
 
 /* ESTILOS MODIFICADOS: Barra de ubicación (Migas de pan / Breadcrumbs) */

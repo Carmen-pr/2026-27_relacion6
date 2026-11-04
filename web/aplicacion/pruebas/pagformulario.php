@@ -16,6 +16,21 @@ $barra = [
     ]
 ];
 
+
+$res= filter_var(0x123, FILTER_VALIDATE_INT);
+
+$o=[
+    "options"=> [
+        "min_range"=> 100,
+        "max_range"=> 200,
+        "default"=> 100
+    ],
+    "flags"=> FILTER_FLAG_ALLOW_HEX
+];
+
+$res= filter_var(0x81, FILTER_VALIDATE_INT, $o);
+
+
 //inicializaciones
 $datos = [
     "nombre" => "vic",
@@ -24,6 +39,10 @@ $datos = [
 $errores = [];
 
 
+if (isset($_POST['cr'])) {
+    //verificacion nombre
+
+}
 
 //dibuja la plantilla de la vista
 inicioCabecera("APLICACION PRIMER TRIMESTRE");
@@ -77,13 +96,13 @@ function formulario(array $datos, array $errores)
     <form action="" method="post">    <!-- get o post  -->
         <label for="nombre">Nombre: </label>
         <input type="text" name="nombre" id="nombre"
-            value="<?php echo $datos["nombre"]; ?>" size=21
+            value="<?= $datos["nombre"]; ?>" size=21
             maxlength="20"><br>
         <label for="precio">Precio: </label>
         <input type="text" name="precio" id="precio"
-            value="<?php echo $datos["precio"]; ?>" size=4
+            value="<?= $datos["precio"]; ?>" size=4
             maxlength="3"><br>
-        <input type="submit" class="boton" value="Crear">
+        <input type="submit" class="boton" value="Crear" name="cr">
     </form>
 <?php
 }
