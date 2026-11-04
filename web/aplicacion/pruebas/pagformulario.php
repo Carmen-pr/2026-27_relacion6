@@ -2,18 +2,18 @@
 include_once(dirname(__FILE__) . "/../../cabecera.php");
 //controlador
 
-$barra = [
+$barra=[
     [
-        "TEXTO" => "inicio",
-        "LINK" => "/index.php",
+       "TEXTO"=> "inicio",
+       "ENLACE" =>"/index.php", // Cambiado LINK por ENLACE
     ],
-    [
-        "TEXTO" => "pruebas",
-        "LINK" => "/aplicacion/pruebas/index.php",
-    ],
-    [
-        "TEXTO" => "eje. formularios",
-    ]
+    [ 
+       "TEXTO"=> "pruebas",   
+       "ENLACE" =>"./index.php", // Cambiado LINK por ENLACE y ruta relativa
+    ], 
+    [ 
+       "TEXTO"=> "clases"  
+    ] 
 ];
 
 

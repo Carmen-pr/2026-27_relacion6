@@ -3,17 +3,17 @@ include_once(dirname(__FILE__) . "/../../cabecera.php");
 //controlador
 
 $barra=[
-     [
+    [
        "TEXTO"=> "inicio",
        "ENLACE" =>"/index.php", // Cambiado LINK por ENLACE
-     ],
-      [ 
+    ],
+    [ 
        "TEXTO"=> "pruebas",   
        "ENLACE" =>"./index.php", // Cambiado LINK por ENLACE y ruta relativa
-     ], 
-       [ 
+    ], 
+    [ 
        "TEXTO"=> "clases"  
-     ] 
+    ] 
 ];
 
 

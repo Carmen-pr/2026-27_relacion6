@@ -17,11 +17,25 @@ $basicos=[
 $otras=rellenarOtras();
 
 
+$barra=[
+     [
+       "TEXTO"=> "inicio",
+       "ENLACE" =>"/index.php", // Cambiado LINK por ENLACE
+     ],
+      [ 
+       "TEXTO"=> "pruebas",   
+       "ENLACE" =>"./index.php", // Cambiado LINK por ENLACE y ruta relativa
+     ], 
+       [ 
+       "TEXTO"=> "pasopar"  
+     ] 
+];
+
 //dibuja la plantilla de la vista
 inicioCabecera("APLICACION PRIMER TRIMESTRE");
 cabecera();
 finCabecera();
-inicioCuerpo("2DAW APLICACION INDEX");
+inicioCuerpo("2DAW APLICACION INDEX" , $barra);
 cuerpo($basicos, $otras);  //llamo a la vista
 finCuerpo();
 // **********************************************************
