@@ -7,9 +7,10 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipografía moderna y limpia */
 }
 
-/* Quitar el subrayado por defecto de todos los enlaces */
-a {
-    text-decoration: none;
+/* Quitar el subrayado por defecto de todos los enlaces, 
+le he puesto tambien !important, para que lo haga si o si */
+a, a:hover {
+    text-decoration: none !important;
 }
 
 
