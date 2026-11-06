@@ -302,12 +302,36 @@ nav ul li {
     padding: 4px;
     margin: 2px;
     border-radius: 4px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.for_texto.input-error {
+    border-color: #EF4444;
+    background-color: #FFF7F7;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.12);
+}
+
+.campo-form {
+    margin-bottom: 14px;
+}
+
+.campo-form label {
+    display: inline-block;
+    min-width: 200px;
+    margin-right: 10px;
 }
 
 .error {
-    background-color: #FEE2E2;                  /* Fondo rojo de alerta suave */
-    color: #991B1B;                             /* Texto granate oscuro de alta visibilidad */
-    border: 2px solid #EF4444;                  /* Borde rojo vivo */
-    padding: 5px;
-    border-radius: 4px;
+    display: block;
+    width: min(100%, 520px);
+    background-color: #FEE2E2;
+    color: #991B1B;
+    border: 2px solid #EF4444;
+    padding: 8px 12px;
+    border-radius: 8px;
+    line-height: 1.35;
+    font-weight: 600;
+    box-sizing: border-box;
+    white-space: normal;
+    margin-top: 6px;
 }
