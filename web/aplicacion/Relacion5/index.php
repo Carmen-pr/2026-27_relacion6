@@ -179,7 +179,7 @@ function validarFormulario(): array
         $errores["password"] = "La contraseña no puede tener más de 15 caracteres";
     } elseif (!validaExpresion($password, REGEX_PASSWORD, "")) {
         // Uso comillas simples porque con dobles PHP intenta leer $_ como una variable
-        $errores["password"] = 'La contraseña debe tener de 8 a 15 caracteres, con una mayúscula, una minúscula, una cifra y un carácter especial ($_-;<>@)';
+        $errores["password"] = 'La contraseña debe tener de 8 a 15 caracteres, con una mayúscula, una minúscula, una cifra y un carácter especial ($_-.;<>@)';
     }
     $datos["password"] = $password;
 

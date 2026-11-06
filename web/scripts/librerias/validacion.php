@@ -15,6 +15,16 @@ require_once __DIR__ . "/val_normal.php";
 require_once __DIR__ . "/val_filter.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/scripts/librerias/validacion.php";
 
+
+use function VALNORMAL\validaCadena;
+use function VALNORMAL\validaEntero;
+use function VALNORMAL\validaExpresion;
+use function VALNORMAL\validaFecha;
+use function VALNORMAL\validaHora;
+use function VALNORMAL\validaRango;
+use function VALNORMAL\validaReal;
+
+
 // ---------- Constantes del formulario ----------
 // Opciones que son válidas
 const ESTADOS = [1 => "estudiante", 2 => "en paro", 3 => "trabajando", 4 => "jubilado"];
@@ -166,15 +176,17 @@ function validarFormulario(): array
     $datos["nombre"] = $nombre;
 
     // ---- Contraseña: máximo 15 caracteres y que cumpla la expresión regular ----
-    // No le hago trim porque los espacios también cuentan en una contraseña
+    // No le hago trim porque los espacios también cuentan en una contraseña y repetir la contraseña
     $password = textoPost("password");
     if (!validaCadena($password, 15, "")) {
         $errores["password"] = "La contraseña no puede tener más de 15 caracteres";
     } elseif (!validaExpresion($password, REGEX_PASSWORD, "")) {
         // Uso comillas simples porque con dobles PHP intenta leer $_ como una variable
-        $errores["password"] = 'La contraseña debe tener de 8 a 15 caracteres, con una mayúscula, una minúscula, una cifra y un carácter especial ($_-;<>@)';
+        $errores["password"] = 'La contraseña debe tener de 8 a 15 caracteres, con una mayúscula, una minúscula, una cifra y un carácter especial ($_.-;<>@)';
     }
     $datos["password"] = $password;
+
+
 
     // ---- Fecha de nacimiento: formato dd/mm/aaaa y que no sea de futuro ----
     $fechaNacimiento = trim(textoPost("fecha_nacimiento"));

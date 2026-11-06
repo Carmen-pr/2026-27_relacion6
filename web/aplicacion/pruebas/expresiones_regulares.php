@@ -65,8 +65,57 @@ preg_match($exp,$cadena,$resultado,PREG_OFFSET_CAPTURE);
 //cuantificador, como hacer perezosos
 $cadena="/* primer comentario */ no comentado /* segundo comentario */”y el patrón /\*.*\*/";
 $exp="/^[\]*.*?[\]/";
-
 preg_match($exp,$cadena,$resultado,PREG_OFFSET_CAPTURE);
+
+//Busqueda
+// Expresión regular: busca palabras (\w+) seguidas de un punto y coma (?=;) sin incluirlo
+$exp="/\w+(?=;)/";
+
+// Cadena de texto sobre la que se realizará la búsqueda
+$cadena="primera segunda tercera; cuarta quinta";
+
+/**
+ * Ejecuta la búsqueda de la expresión regular en la cadena.
+ * 
+ * PREG_OFFSET_CAPTURE Devuelve un array con el texto encontrado 
+ *                            y su posición (offset) en la cadena.
+ * Resultado esperado en $resultado:
+ * array(
+ *    => array(
+ *       => "tercera", // Texto que cumple la condición
+ *       => 16         // Posición del carácter 't' (empezando desde 0)
+ *    )
+ * )
+ */
+preg_match($exp,$cadena,$resultado,PREG_OFFSET_CAPTURE);
+
+/************************************************************************************* */
+
+$exp="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&\-_+])[A-Za-z\d$@!%*?&\-_+]{8,15}$/";
+$cadena="AAAAAAbbbbb11";
+preg_match($exp,$cadena,$resultado,PREG_OFFSET_CAPTURE);
+
+
+$exp="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&\-_+])[A-Za-z\d$@!%*?&\-_+]{8,15}$/";
+$cadena="AAAAbbbbb11%?";
+preg_match($exp,$cadena,$resultado,PREG_OFFSET_CAPTURE);
+
+$exp="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&\-_+])[A-Za-z\d$@!%*?&\-_+]{8,15}$/";
+$cadena="1A?A3Ab11%?";
+preg_match($exp,$cadena,$resultado,PREG_OFFSET_CAPTURE);
+
+$exp="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&\-_+])[A-Za-z\d$@!%*?&\-_+]{8,15}$/";
+$cadena="1A?A3Ab11%?";
+preg_match($exp,$cadena,$resultado,PREG_OFFSET_CAPTURE);
+
+$exp="/(?<=.*;)\w+/";
+$cadena="; primera ; ";
+preg_match($exp,$cadena,$resultado,PREG_OFFSET_CAPTURE);
+
+
+
+
+
 
 //dibuja la plantilla de la vista
 inicioCabecera("APLICACION PRIMER TRIMESTRE");
