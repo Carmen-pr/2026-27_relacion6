@@ -1,318 +1,119 @@
 <?php
-/* index.php de la relacion5
-   Ejercicio 1: pruebas de las librerías de validación (index.php?ejercicio=1).
-   Ejercicio 2: formulario con validación en el servidor (index.php?ejercicio=2),
-   es el que sale por defecto.
-   El controlador valida los datos y no escribe nada en la página.
-   La vista recibe los datos por parámetro y los muestra. */
+/* 
+   Librería de validación para reutilizar en otras prácticas.
+   Es una copia de val_filter.php pero sin espacio de nombres,
+   así que las funciones se llaman directamente: validaEntero(), validaReal()...
+   Donde filter no tiene nada que me sirva, copio lo que hice en val_normal.php. 
+*/
 
-// Pongo la zona horaria para que las fechas y las horas salgan bien
-date_default_timezone_set("Europe/Madrid");
-
-// Cargo la plantilla y las tres librerías de validación
-require_once $_SERVER["DOCUMENT_ROOT"] . "/cabecera.php";
-require_once __DIR__ . "/val_normal.php";
-require_once __DIR__ . "/val_filter.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/scripts/librerias/validacion.php";
-
-
-use function VALNORMAL\validaCadena;
-use function VALNORMAL\validaEntero;
-use function VALNORMAL\validaExpresion;
-use function VALNORMAL\validaFecha;
-use function VALNORMAL\validaHora;
-use function VALNORMAL\validaRango;
-use function VALNORMAL\validaReal;
-
-
-// ---------- Constantes del formulario ----------
-// Opciones que son válidas
-const ESTADOS = [1 => "estudiante", 2 => "en paro", 3 => "trabajando", 4 => "jubilado"];
-const ESTUDIOS = [0 => "sin estudios", 1 => "primaria", 2 => "secundaria",
-                  3 => "bachillerato", 4 => "ciclo formativo", 5 => "universitarios"];
-
-// Opciones que enseño en el formulario: llevan una incorrecta (la 5 y la 6)
-// para comprobar que el servidor la rechaza
-const ESTADOS_FORMULARIO = [1 => "estudiante", 2 => "en paro", 3 => "trabajando",
-                            4 => "jubilado", 5 => "incorrecta"];
-const ESTUDIOS_FORMULARIO = [0 => "sin estudios", 1 => "primaria", 2 => "secundaria",
-                            3 => "bachillerato", 4 => "ciclo formativo", 5 => "universitarios",
-                            6 => "incorrecta"];
-
-// Contraseña: de 8 a 15 caracteres con una mayúscula, una minúscula, una cifra
-// y un carácter especial de $ _ - ; < > @
-const REGEX_PASSWORD = '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[$_\-;<>@]).{8,15}$/u';
-
-// ======================= CONTROLADOR =======================
-
-// Cojo un dato de $_POST y lo devuelvo siempre como texto
-// Si no existe o llega un array devuelvo ""
-function textoPost(string $campo): string
+// Compruebo que el entero esté entre $min y $max
+function validaEntero(int &$var, int $min, int $max, int $defecto): bool
 {
-    $valor = $_POST[$campo] ?? "";
-    return is_string($valor) ? $valor : "";
+    // Le paso a filter_var el rango en las opciones
+    $opciones = ["options" => ["min_range" => $min, "max_range" => $max]];
+    $resultado = filter_var($var, FILTER_VALIDATE_INT, $opciones);
+
+    // Comparo con === false porque el 0 también es un valor correcto
+    if ($resultado === false) {
+        $var = $defecto;
+        return false;
+    }
+    // filter_var me devuelve el número ya convertido, lo guardo en $var
+    $var = $resultado;
+    return true;
 }
 
-// Paso un texto dd/mm/aaaa a un objeto DateTime
-// El ! pone la hora a 00:00:00 para que solo se comparen los días
-function crearFecha(string $fecha): DateTime
+// Compruebo que el real esté entre $min y $max
+function validaReal(float &$var, float $min, float $max, float $defecto): bool
 {
-    return DateTime::createFromFormat("!d/m/Y", $fecha);
+    $opciones = ["options" => ["min_range" => $min, "max_range" => $max]];
+    $resultado = filter_var($var, FILTER_VALIDATE_FLOAT, $opciones);
+
+    if ($resultado === false) {
+        $var = $defecto;
+        return false;
+    }
+    $var = $resultado;
+    return true;
 }
 
-// Miro en la URL qué ejercicio hay que enseñar (solo vale "1" o "2")
-// Si pone otra cosa dejo el 2, que es el de por defecto
-function obtenerEjercicio(): string
+// Fecha dd/mm/aaaa
+// En filter no hay nada para fechas, así que copio lo de val_normal
+function validaFecha(string &$var, string $defecto): bool
 {
-    $ejercicio = $_GET["ejercicio"] ?? "2";
-    if (!is_string($ejercicio) || !validaRango($ejercicio, ["1", "2"])) {
-        return "2";
+    $texto = trim($var);
+
+    if (preg_match('#^(\d{1,2})/(\d{1,2})/(\d{4})$#', $texto, $partes) === 1
+        && checkdate((int) $partes[2], (int) $partes[1], (int) $partes[3])) {
+        $var = sprintf("%02d/%02d/%04d", (int) $partes[1], (int) $partes[2], (int) $partes[3]);
+        return true;
     }
-    return $ejercicio;
+    $var = $defecto;
+    return false;
 }
 
-// ---------- Ejercicio 1: pruebas de las librerías ----------
-
-// Pruebo una función en las dos librerías y miro si da lo que espero
-// $esperado lleva [lo que debe devolver la función (true o false),
-//                  el valor que debe quedar en la variable]
-function probar(string $descripcion, string $funcion, array $esperado, mixed $valor, mixed ...$parametros): array
+// Hora hh:mm:ss
+// Tampoco hay nada para horas en filter, copio lo de val_normal
+function validaHora(string &$var, string $defecto): bool
 {
-    [$okEsperado, $valorEsperado] = $esperado;
+    $texto = trim($var);
 
-    // Cada librería usa su propia copia porque las funciones cambian la variable
-    $enNormal = $valor;
-    $enFilter = $valor;
-
-    // Nombre completo de la función: espacio de nombres + nombre
-    $funcionNormal = "VALNORMAL\\" . $funcion;
-    $funcionFilter = "VALFILTER\\" . $funcion;
-
-    // Llamo a la función de cada librería
-    $okNormal = $funcionNormal($enNormal, ...$parametros);
-    $okFilter = $funcionFilter($enFilter, ...$parametros);
-
-    return [
-        "descripcion" => $descripcion,
-        "esperado" => ["ok" => $okEsperado, "valor" => $valorEsperado],
-        // "pasa" es true si devuelve lo esperado y la variable queda con el valor esperado
-        "normal" => ["ok" => $okNormal, "valor" => $enNormal,
-                     "pasa" => ($okNormal === $okEsperado && $enNormal === $valorEsperado)],
-        "filter" => ["ok" => $okFilter, "valor" => $enFilter,
-                     "pasa" => ($okFilter === $okEsperado && $enFilter === $valorEsperado)],
-    ];
+    if (preg_match('#^(\d{1,2}):(\d{1,2}):(\d{1,2})$#', $texto, $partes) === 1
+        && (int) $partes[1] <= 23
+        && (int) $partes[2] <= 59
+        && (int) $partes[3] <= 59) {
+        $var = sprintf("%02d:%02d:%02d", (int) $partes[1], (int) $partes[2], (int) $partes[3]);
+        return true;
+    }
+    $var = $defecto;
+    return false;
 }
 
-function obtenerPruebasLibrerias(): array
+// Email: primero lo saneo y después lo valido, los dos con filter
+function validaEmail(string &$var, string $defecto): bool
 {
-    // Cada prueba lleva lo que espero que pase: [true o false, valor que queda]
-    $filas = [
-        probar('validaEntero(7, 1, 10, 5)', "validaEntero", [true, 7], 7, 1, 10, 5),
-        probar('validaEntero(15, 1, 10, 5)', "validaEntero", [false, 5], 15, 1, 10, 5),
-        probar('validaReal(3.5, 1, 10, 1)', "validaReal", [true, 3.5], 3.5, 1.0, 10.0, 1.0),
-        probar('validaReal(12.5, 1, 10, 1)', "validaReal", [false, 1.0], 12.5, 1.0, 10.0, 1.0),
-        probar('validaFecha("1/2/2023", "01/01/2000")', "validaFecha", [true, "01/02/2023"], "1/2/2023", "01/01/2000"),
-        probar('validaFecha("31/02/2023", "01/01/2000")', "validaFecha", [false, "01/01/2000"], "31/02/2023", "01/01/2000"),
-        probar('validaHora("0:5:1", "00:00:00")', "validaHora", [true, "00:05:01"], "0:5:1", "00:00:00"),
-        probar('validaHora("25:00:00", "00:00:00")', "validaHora", [false, "00:00:00"], "25:00:00", "00:00:00"),
-        probar('validaEmail("ana@correo.es", "")', "validaEmail", [true, "ana@correo.es"], "ana@correo.es", ""),
-        probar('validaEmail("ana@correo", "")', "validaEmail", [false, ""], "ana@correo", ""),
-        probar('validaCadena("hola", 10, "")', "validaCadena", [true, "hola"], "hola", 10, ""),
-        probar('validaCadena("una cadena demasiado larga", 10, "")', "validaCadena", [false, ""], "una cadena demasiado larga", 10, ""),
-        probar('validaExpresion("AB123", "/^[A-Z]{2}[0-9]{3}$/", "")', "validaExpresion", [true, "AB123"], "AB123", '/^[A-Z]{2}[0-9]{3}$/', ""),
-        probar('validaExpresion("ab123", "/^[A-Z]{2}[0-9]{3}$/", "")', "validaExpresion", [false, ""], "ab123", '/^[A-Z]{2}[0-9]{3}$/', ""),
-        probar('validaRango(3, [1, 2, 3], 1)', "validaRango", [true, 3], 3, [1, 2, 3], 1),
-        probar('validaRango("b", ["a" => 1, "b" => 2], 2)', "validaRango", [true, "b"], "b", ["a" => 1, "b" => 2], 2),
-        probar('validaRango(9, [1, 2, 3], 1)', "validaRango", [false, 9], 9, [1, 2, 3], 1),
-    ];
+    // FILTER_SANITIZE_EMAIL quita los caracteres que no pueden estar en un email
+    $limpio = filter_var(trim($var), FILTER_SANITIZE_EMAIL);
 
-    // Cuento las pruebas que han salido bien (cada fila prueba las dos librerías)
-    $superadas = 0;
-    foreach ($filas as $fila) {
-        $superadas += (int) $fila["normal"]["pasa"] + (int) $fila["filter"]["pasa"];
+    // FILTER_VALIDATE_EMAIL mira que el formato sea aaaa@bbbb.ccc
+    if ($limpio !== false && filter_var($limpio, FILTER_VALIDATE_EMAIL) !== false) {
+        $var = $limpio;
+        return true;
     }
-
-    return ["filas" => $filas, "superadas" => $superadas, "total" => count($filas) * 2];
+    $var = $defecto;
+    return false;
 }
 
-// ---------- Ejercicio 2: formulario ----------
-
-// Valores con los que sale el formulario la primera vez
-function valoresPorDefecto(): array
+// Longitud de la cadena
+// En filter no hay nada para la longitud, copio lo de val_normal
+function validaCadena(string &$var, int $longitud, string $defecto): bool
 {
-    return [
-        "nombre" => "",
-        "password" => "",
-        "fecha_nacimiento" => "",
-        "carnet_dia" => "",
-        "carnet_mes" => "",
-        "carnet_anio" => "",
-        "hora" => "",
-        "estado" => null,        // ningún estado marcado
-        "estudios" => [],        // ningún estudio marcado
-        "hermanos" => 0,
-        "sueldo" => 1100.0,
-    ];
+    if (mb_strlen($var) <= $longitud) {
+        return true;
+    }
+    $var = $defecto;
+    return false;
 }
 
-// Valido todos los datos del formulario con las funciones de validacion.php
-// Devuelve los datos ya corregidos y los errores
-function validarFormulario(): array
+// Expresión regular, con FILTER_VALIDATE_REGEXP
+function validaExpresion(string &$var, string $expresion, string $defecto): bool
 {
-    $datos = valoresPorDefecto();
-    $errores = [];
-    $hoy = new DateTime("today");
+    // La expresión se la paso en las opciones
+    $opciones = ["options" => ["regexp" => $expresion]];
 
-    // ---- Nombre: máximo 25, no puede estar vacío ni empezar por H, y lo paso a mayúsculas ----
-    $nombre = mb_strtoupper(trim(textoPost("nombre")));
-    if (!validaCadena($nombre, 25, "")) {
-        $errores["nombre"] = "El nombre no puede tener más de 25 caracteres";
-    } elseif (mb_strlen($nombre) === 0) {
-        $errores["nombre"] = "El nombre no puede estar vacío";
-    } elseif (mb_substr($nombre, 0, 1) === "H") {
-        $errores["nombre"] = "El nombre no puede empezar por H";
-        $nombre = "";
+    if (filter_var($var, FILTER_VALIDATE_REGEXP, $opciones) === false) {
+        $var = $defecto;
+        return false;
     }
-    $datos["nombre"] = $nombre;
-
-    // ---- Contraseña: máximo 15 caracteres y que cumpla la expresión regular ----
-    // No le hago trim porque los espacios también cuentan en una contraseña y repetir la contraseña
-    $password = textoPost("password");
-    if (!validaCadena($password, 15, "")) {
-        $errores["password"] = "La contraseña no puede tener más de 15 caracteres";
-    } elseif (!validaExpresion($password, REGEX_PASSWORD, "")) {
-        // Uso comillas simples porque con dobles PHP intenta leer $_ como una variable
-        $errores["password"] = 'La contraseña debe tener de 8 a 15 caracteres, con una mayúscula, una minúscula, una cifra y un carácter especial ($_.-;<>@)';
-    }
-    $datos["password"] = $password;
-
-
-
-    // ---- Fecha de nacimiento: formato dd/mm/aaaa y que no sea de futuro ----
-    $fechaNacimiento = trim(textoPost("fecha_nacimiento"));
-    if (!validaFecha($fechaNacimiento, "")) {
-        $errores["fecha_nacimiento"] = "La fecha de nacimiento no es válida (formato dd/mm/aaaa)";
-    } elseif (crearFecha($fechaNacimiento) > $hoy) {
-        $errores["fecha_nacimiento"] = "La fecha de nacimiento no puede ser futura";
-        $fechaNacimiento = "";
-    }
-    $datos["fecha_nacimiento"] = $fechaNacimiento;
-
-    // ---- Fecha de carnet: llegan 3 campos y los junto en una sola fecha ----
-    $dia = trim(textoPost("carnet_dia"));
-    $mes = trim(textoPost("carnet_mes"));
-    $anio = trim(textoPost("carnet_anio"));
-    $fechaCarnet = $dia . "/" . $mes . "/" . $anio;
-    if (!validaFecha($fechaCarnet, "")) {
-        $errores["carnet"] = "La fecha del carnet no es válida";
-    } elseif (crearFecha($fechaCarnet) > $hoy) {
-        $errores["carnet"] = "La fecha del carnet no puede ser futura";
-        $fechaCarnet = "";
-    } elseif ($fechaNacimiento !== "") {
-        // Le resto 18 años a la fecha del carnet
-        // Si sale anterior al nacimiento, cuando se sacó el carnet era menor de edad
-        $limite = crearFecha($fechaCarnet);
-        $limite->sub(new DateInterval("P18Y"));
-        $intervalo = crearFecha($fechaNacimiento)->diff($limite);
-        // invert vale 1 si la fecha límite es anterior al nacimiento
-        if ($intervalo->invert === 1) {
-            $errores["carnet"] = "El carnet debe sacarse siendo mayor de edad (18 años cumplidos)";
-            $fechaCarnet = "";
-        }
-    }
-    // Vuelvo a separar día, mes y año para enseñar los tres campos en el formulario
-    [$datos["carnet_dia"], $datos["carnet_mes"], $datos["carnet_anio"]] =
-        ($fechaCarnet === "") ? ["", "", ""] : explode("/", $fechaCarnet);
-
-    // ---- Hora de levantarse: formato hh:mm:ss ----
-    $hora = trim(textoPost("hora"));
-    if (!validaHora($hora, "")) {
-        $errores["hora"] = "La hora no es válida (formato hh:mm:ss)";
-    }
-    $datos["hora"] = $hora;
-
-    // ---- Estado: es obligatorio y tiene que ser uno de los válidos ----
-    $estadoTexto = trim(textoPost("estado"));
-    if ($estadoTexto === "") {
-        $errores["estado"] = "Debe indicar un estado";
-    } elseif (!ctype_digit($estadoTexto) || !validaRango((int) $estadoTexto, ESTADOS, 2)) {
-        // ctype_digit mira que sean solo cifras, porque (int) "abc" daría 0 sin avisar
-        $errores["estado"] = "El estado elegido no es válido";
-    } else {
-        $datos["estado"] = (int) $estadoTexto;
-    }
-
-    // ---- Estudios: al menos uno y todos válidos. Si está el 0, ningún otro ----
-    $enviados = $_POST["estudios"] ?? [];
-    if (!is_array($enviados)) {
-        $enviados = [];
-    }
-    // Recorro los códigos que han llegado y me quedo solo con los válidos
-    $estudios = [];
-    $hayNoValidos = false;
-    foreach ($enviados as $codigo) {
-        if (is_string($codigo) && ctype_digit($codigo) && validaRango((int) $codigo, ESTUDIOS, 2)) {
-            $estudios[] = (int) $codigo;
-        } else {
-            $hayNoValidos = true;
-        }
-    }
-    // Quito los repetidos y los ordeno
-    $estudios = array_values(array_unique($estudios));
-    sort($estudios);
-    // Si está el 0 (sin estudios) dejo solo ese y desmarco el resto
-    if (in_array(0, $estudios, true)) {
-        $estudios = [0];
-    }
-    if ($hayNoValidos) {
-        $errores["estudios"] = "Has marcado una opción de estudios que no es válida";
-    } elseif (count($estudios) === 0) {
-        $errores["estudios"] = "Debe seleccionar al menos un estudio";
-    }
-    $datos["estudios"] = $estudios;
-
-    // ---- Hermanos: entero entre 0 y 20 ----
-    // validaEntero necesita un int, así que antes miro que el texto sea un número entero
-    $hermanosTexto = trim(textoPost("hermanos"));
-    $hermanos = 0;
-    $correcto = preg_match('/^-?\d+$/', $hermanosTexto) === 1;
-    if ($correcto) {
-        $hermanos = (int) $hermanosTexto;
-        $correcto = validaEntero($hermanos, 0, 20, 0);
-    }
-    if (!$correcto) {
-        $errores["hermanos"] = "Los hermanos deben ser un número entero entre 0 y 20";
-    }
-    $datos["hermanos"] = $hermanos;
-
-    // ---- Sueldo: real entre 1000 y 150000 ----
-    // validaReal necesita un float, así que miro que sea un número
-    // y cambio la coma por un punto por si lo escriben con coma
-    $sueldoTexto = str_replace(",", ".", trim(textoPost("sueldo")));
-    $sueldo = 1100.0;
-    $correcto = is_numeric($sueldoTexto);
-    if ($correcto) {
-        $sueldo = (float) $sueldoTexto;
-        $correcto = validaReal($sueldo, 1000.0, 150000.0, 1100.0);
-    }
-    if (!$correcto) {
-        $errores["sueldo"] = "El sueldo debe ser un número entre 1000 y 150000";
-    }
-    $datos["sueldo"] = $sueldo;
-
-    return [$datos, $errores];
+    return true;
 }
 
-// Preparo los datos del ejercicio 2
-function obtenerDatosFormulario(): array
+// Rango
+// En filter no hay nada para esto, copio lo de val_normal
+function validaRango(mixed $var, array $posibles, int $tipo = 1): bool
 {
-    // Si no se ha pulsado enviar (primera vez) saco el formulario con los valores por defecto
-    if (!isset($_POST["enviar"])) {
-        return ["datos" => valoresPorDefecto(), "errores" => [], "correcto" => false];
+    if ($tipo === 2) {
+        return (is_int($var) || is_string($var)) && array_key_exists($var, $posibles);
     }
-
-    // Si se ha enviado, valido los datos
-    [$datos, $errores] = validarFormulario();
-    return ["datos" => $datos, "errores" => $errores, "correcto" => count($errores) === 0];
+    return in_array($var, $posibles, true);
 }
-

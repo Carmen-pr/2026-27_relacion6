@@ -53,7 +53,7 @@ header {
 #documento {
     margin: 30px auto;                          /* Separación superior/inferior y centrado en pantalla */
     background-color: #FFFFFF;                  /* Blanco puro para el fondo de los ejercicios */
-    max-width: 700px;                           /* Ancho máximo de la tarjeta */
+    max-width: 1100px;                          /* Ancho máximo de la tarjeta */
     padding: 20px;                              /* Espaciado interno */
     border: 3px solid #777BB4;                  /* Borde grueso con el color púrpura de PHP */
     border-radius: 12px;                        /* Esquinas redondeadas */
@@ -226,6 +226,45 @@ nav ul li {
 .tabla th {
     background-color: #777BB4;                  /* Cabecera de la tabla morada PHP */
     color: white;                               /* Contraste en blanco */
+}
+
+/* Más espacio y texto más legible en las celdas.
+   !important porque la tabla del ejercicio 1 lleva estilos en línea en el PHP */
+.tabla {
+    table-layout: auto !important;              /* Cada columna se ajusta a su contenido */
+    border-spacing: 0 !important;               /* Sin huecos: las filas se separan con una línea */
+    font-size: 1.05em;
+}
+
+.tabla th,
+.tabla td {
+    padding: 14px 18px !important;              /* Más aire dentro de cada celda */
+    text-align: left;
+    overflow-wrap: anywhere;                    /* El texto largo se parte en vez de pisar la columna de al lado */
+}
+
+.tabla td {
+    color: #1E293B;                             /* Texto oscuro para que se lea bien */
+    border-bottom: 1px solid #CBD5E1;           /* Línea que separa cada fila */
+    border-right: 1px solid #E2E8F0;            /* Línea que separa cada columna */
+}
+
+.tabla td:last-child {
+    border-right: none;
+}
+
+.tabla tr:nth-child(even) td {
+    background-color: #F8FAFC;                  /* Filas alternas para seguir cada línea */
+}
+
+.tabla td:first-child {
+    min-width: 260px;                           /* La columna de la prueba es la más larga */
+    font-family: Consolas, 'Courier New', monospace; /* Código en tipografía de código */
+    font-size: 0.95em;
+}
+
+.tabla td.error {
+    background-color: #FEE2E2 !important;       /* Las pruebas que fallan siguen en rojo */
 }
 
 .tabla tr.par {

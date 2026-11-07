@@ -1,10 +1,11 @@
 <?php
-/* index.php de la relacion5
+/* 
    Ejercicio 1: pruebas de las librerías de validación (index.php?ejercicio=1).
    Ejercicio 2: formulario con validación en el servidor (index.php?ejercicio=2),
    es el que sale por defecto.
    El controlador valida los datos y no escribe nada en la página.
-   La vista recibe los datos por parámetro y los muestra. */
+   La vista recibe los datos por parámetro y los muestra. 
+*/
 
 // Pongo la zona horaria para que las fechas y las horas salgan bien
 date_default_timezone_set("Europe/Madrid");
@@ -182,6 +183,18 @@ function validarFormulario(): array
         $errores["password"] = 'La contraseña debe tener de 8 a 15 caracteres, con una mayúscula, una minúscula, una cifra y un carácter especial ($_-.;<>@)';
     }
     $datos["password"] = $password;
+
+    // ---- Repetir contraseña: tiene que ser igual a la primera ----
+    // Solo la compruebo si la primera es correcta, para no dar dos errores por lo mismo
+    $password2 = textoPost("password2");
+    if (!isset($errores["password"])) {
+        if ($password2 === "") {
+            $errores["password2"] = "Debe repetir la contraseña";
+        } elseif ($password2 !== $password) {
+            $errores["password2"] = "Las contraseñas no coinciden";
+        }
+    }
+    // No guardo la repetición en $datos: los campos password no se vuelven a rellenar
 
     // ---- Fecha de nacimiento: formato dd/mm/aaaa y que no sea de futuro ----
     $fechaNacimiento = trim(textoPost("fecha_nacimiento"));
@@ -426,6 +439,12 @@ function mostrarFormulario(array $datos, array $errores): void
                 <input type="password" class="<?php echo claseCampo($errores, "password"); ?>" name="password">
             </label>
             <?php mostrarError($errores, "password"); ?>
+        </div>
+        <div class="campo-form">
+            <label>Repetir contraseña:
+                <input type="password" class="<?php echo claseCampo($errores, "password2"); ?>" name="password2">
+            </label>
+            <?php mostrarError($errores, "password2"); ?>
         </div>
         <div class="campo-form">
             <label>Fecha de nacimiento (dd/mm/aaaa):

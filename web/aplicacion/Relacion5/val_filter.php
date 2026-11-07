@@ -1,8 +1,9 @@
 <?php
-/* val_filter.php
+/* 
    Librería para validar datos usando la librería filter de PHP.
    Le pongo el espacio de nombres VALFILTER.
-   Donde filter no tiene nada que me sirva, copio lo que hice en val_normal.php. */
+   Donde filter no tiene nada que me sirva, copio lo que hice en val_normal.php. 
+*/
 
 namespace VALFILTER;
 

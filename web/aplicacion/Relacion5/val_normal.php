@@ -1,8 +1,9 @@
 <?php
-/* val_normal.php
+/* 
    Librería para validar datos sin usar la librería filter, solo con comparaciones
    y expresiones regulares.
-   Le pongo el espacio de nombres VALNORMAL para poder usarla a la vez que la otra. */
+   Le pongo el espacio de nombres VALNORMAL para poder usarla a la vez que la otra. 
+*/
 
 namespace VALNORMAL;
 
