@@ -6,7 +6,16 @@
    Donde filter no tiene nada que me sirva, copio lo que hice en val_normal.php. 
 */
 
-// Compruebo que el entero esté entre $min y $max
+/**
+ * Comprueba que $var sea un entero entre $min y $max (ambos incluidos).
+ * Usa filter_var con FILTER_VALIDATE_INT y las opciones min_range y max_range.
+ *
+ * @param int &$var Entero a validar. Por referencia: al terminar tiene el valor saneado o $defecto.
+ * @param int $min Valor mínimo permitido.
+ * @param int $max Valor máximo permitido.
+ * @param int $defecto Valor que se asigna si no es válido.
+ * @return bool true si es correcto, false si no.
+ */
 function validaEntero(int &$var, int $min, int $max, int $defecto): bool
 {
     // Le paso a filter_var el rango en las opciones
@@ -23,7 +32,16 @@ function validaEntero(int &$var, int $min, int $max, int $defecto): bool
     return true;
 }
 
-// Compruebo que el real esté entre $min y $max
+/**
+ * Comprueba que $var sea un real entre $min y $max (ambos incluidos).
+ * Usa filter_var con FILTER_VALIDATE_FLOAT y las opciones min_range y max_range.
+ *
+ * @param float &$var Real a validar. Por referencia: al terminar tiene el valor saneado o $defecto.
+ * @param float $min Valor mínimo permitido.
+ * @param float $max Valor máximo permitido.
+ * @param float $defecto Valor que se asigna si no es válido.
+ * @return bool true si es correcto, false si no.
+ */
 function validaReal(float &$var, float $min, float $max, float $defecto): bool
 {
     $opciones = ["options" => ["min_range" => $min, "max_range" => $max]];
@@ -37,14 +55,23 @@ function validaReal(float &$var, float $min, float $max, float $defecto): bool
     return true;
 }
 
-// Fecha dd/mm/aaaa
-// En filter no hay nada para fechas, así que copio lo de val_normal
+/**
+ * Comprueba que $var sea una fecha dd/mm/aaaa que exista.
+ * Acepta 1/2/2023 y la deja saneada como 01/02/2023.
+ * En FILTER no hay nada para fechas, se usa la misma comprobación que en val_normal.php.
+ *
+ * @param string &$var Fecha a validar. Por referencia: al terminar tiene la fecha saneada o $defecto.
+ * @param string $defecto Valor que se asigna si no es válida.
+ * @return bool true si es correcta, false si no.
+ */
 function validaFecha(string &$var, string $defecto): bool
 {
     $texto = trim($var);
 
-    if (preg_match('#^(\d{1,2})/(\d{1,2})/(\d{4})$#', $texto, $partes) === 1
-        && checkdate((int) $partes[2], (int) $partes[1], (int) $partes[3])) {
+    if (
+        preg_match('#^(\d{1,2})/(\d{1,2})/(\d{4})$#', $texto, $partes) === 1
+        && checkdate((int) $partes[2], (int) $partes[1], (int) $partes[3])
+    ) {
         $var = sprintf("%02d/%02d/%04d", (int) $partes[1], (int) $partes[2], (int) $partes[3]);
         return true;
     }
@@ -52,16 +79,25 @@ function validaFecha(string &$var, string $defecto): bool
     return false;
 }
 
-// Hora hh:mm:ss
-// Tampoco hay nada para horas en filter, copio lo de val_normal
+/**
+ * Comprueba que $var sea una hora hh:mm:ss correcta.
+ * Acepta 0:5:1 y la deja saneada como 00:05:01.
+ * En FILTER no hay nada para horas, se usa la misma comprobación que en val_normal.php.
+ *
+ * @param string &$var Hora a validar. Por referencia: al terminar tiene la hora saneada o $defecto.
+ * @param string $defecto Valor que se asigna si no es válida.
+ * @return bool true si es correcta, false si no.
+ */
 function validaHora(string &$var, string $defecto): bool
 {
     $texto = trim($var);
 
-    if (preg_match('#^(\d{1,2}):(\d{1,2}):(\d{1,2})$#', $texto, $partes) === 1
+    if (
+        preg_match('#^(\d{1,2}):(\d{1,2}):(\d{1,2})$#', $texto, $partes) === 1
         && (int) $partes[1] <= 23
         && (int) $partes[2] <= 59
-        && (int) $partes[3] <= 59) {
+        && (int) $partes[3] <= 59
+    ) {
         $var = sprintf("%02d:%02d:%02d", (int) $partes[1], (int) $partes[2], (int) $partes[3]);
         return true;
     }
@@ -69,7 +105,14 @@ function validaHora(string &$var, string $defecto): bool
     return false;
 }
 
-// Email: primero lo saneo y después lo valido, los dos con filter
+/**
+ * Comprueba que $var sea un email con la forma aaaa@bbbb.ccc.
+ * Primero lo sanea con FILTER_SANITIZE_EMAIL y luego lo valida con FILTER_VALIDATE_EMAIL.
+ *
+ * @param string &$var Email a validar. Por referencia: al terminar tiene el email saneado o $defecto.
+ * @param string $defecto Valor que se asigna si no es válido.
+ * @return bool true si es correcto, false si no.
+ */
 function validaEmail(string &$var, string $defecto): bool
 {
     // FILTER_SANITIZE_EMAIL quita los caracteres que no pueden estar en un email
@@ -84,8 +127,16 @@ function validaEmail(string &$var, string $defecto): bool
     return false;
 }
 
-// Longitud de la cadena
-// En filter no hay nada para la longitud, copio lo de val_normal
+/**
+ * Comprueba que $var no tenga más de $longitud caracteres.
+ * Usa mb_strlen para contar bien las tildes y las ñ.
+ * En FILTER no hay nada para la longitud, se usa la misma comprobación que en val_normal.php.
+ *
+ * @param string &$var Cadena a validar. Por referencia: se deja igual si es válida o pasa a valer $defecto.
+ * @param int $longitud Longitud máxima permitida.
+ * @param string $defecto Valor que se asigna si no es válida.
+ * @return bool true si es correcta, false si no.
+ */
 function validaCadena(string &$var, int $longitud, string $defecto): bool
 {
     if (mb_strlen($var) <= $longitud) {
@@ -95,7 +146,15 @@ function validaCadena(string &$var, int $longitud, string $defecto): bool
     return false;
 }
 
-// Expresión regular, con FILTER_VALIDATE_REGEXP
+/**
+ * Comprueba que $var cumpla la expresión regular $expresion.
+ * Usa filter_var con FILTER_VALIDATE_REGEXP.
+ *
+ * @param string &$var Cadena a validar. Por referencia: se deja igual si es válida o pasa a valer $defecto.
+ * @param string $expresion Expresión regular que debe cumplir.
+ * @param string $defecto Valor que se asigna si no la cumple.
+ * @return bool true si cumple la expresión, false si no.
+ */
 function validaExpresion(string &$var, string $expresion, string $defecto): bool
 {
     // La expresión se la paso en las opciones
@@ -108,8 +167,16 @@ function validaExpresion(string &$var, string $expresion, string $defecto): bool
     return true;
 }
 
-// Rango
-// En filter no hay nada para esto, copio lo de val_normal
+/**
+ * Comprueba que $var sea uno de los valores de $posibles ($tipo = 1)
+ * o una de sus claves ($tipo = 2).
+ * En FILTER no hay nada para rangos, se usa la misma comprobación que en val_normal.php.
+ *
+ * @param mixed $var Valor a buscar.
+ * @param array $posibles Valores (o claves) permitidos.
+ * @param int $tipo 1 para comparar con los valores, 2 para comparar con las claves.
+ * @return bool true si está en el array, false si no.
+ */
 function validaRango(mixed $var, array $posibles, int $tipo = 1): bool
 {
     if ($tipo === 2) {

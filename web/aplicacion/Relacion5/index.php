@@ -7,59 +7,112 @@
    La vista recibe los datos por parámetro y los muestra. 
 */
 
-// Pongo la zona horaria para que las fechas y las horas salgan bien
-date_default_timezone_set("Europe/Madrid");
-
 // Cargo la plantilla y las librerías de validación
-require_once $_SERVER["DOCUMENT_ROOT"] . "/cabecera.php";
-require_once __DIR__ . "/val_normal.php";
-require_once __DIR__ . "/val_filter.php";
+include_once(dirname(__FILE__) . "/../../cabecera.php");
+// Ejercicio 1: las dos librerías con espacio de nombres (VALNORMAL y VALFILTER)
+include_once(dirname(__FILE__) . "/val_normal.php");
+include_once(dirname(__FILE__) . "/val_filter.php");
+// Ejercicio 2: la librería reutilizable, sin espacio de nombres (scripts/librerias)
+include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
 
-use function VALNORMAL\validaCadena;
-use function VALNORMAL\validaEntero;
-use function VALNORMAL\validaExpresion;
-use function VALNORMAL\validaFecha;
-use function VALNORMAL\validaHora;
-use function VALNORMAL\validaRango;
-use function VALNORMAL\validaReal;
+// Pongo la zona horaria después de cargar cabecera.php, que también pone una
+date_default_timezone_set("Europe/Madrid");
 
 // ---------- Constantes del formulario ----------
 // Opciones que son válidas
 const ESTADOS = [1 => "estudiante", 2 => "en paro", 3 => "trabajando", 4 => "jubilado"];
-const ESTUDIOS = [0 => "sin estudios", 1 => "primaria", 2 => "secundaria",
-                  3 => "bachillerato", 4 => "ciclo formativo", 5 => "universitarios"];
+const ESTUDIOS = [
+    0 => "sin estudios",
+    1 => "primaria",
+    2 => "secundaria",
+    3 => "bachillerato",
+    4 => "ciclo formativo",
+    5 => "universitarios"
+];
 
 // Opciones que enseño en el formulario: llevan una incorrecta (la 5 y la 6)
 // para comprobar que el servidor la rechaza
-const ESTADOS_FORMULARIO = [1 => "estudiante", 2 => "en paro", 3 => "trabajando",
-                            4 => "jubilado", 5 => "incorrecta"];
-const ESTUDIOS_FORMULARIO = [0 => "sin estudios", 1 => "primaria", 2 => "secundaria",
-                            3 => "bachillerato", 4 => "ciclo formativo", 5 => "universitarios",
-                            6 => "incorrecta"];
+const ESTADOS_FORMULARIO = [
+    1 => "estudiante",
+    2 => "en paro",
+    3 => "trabajando",
+    4 => "jubilado",
+    5 => "incorrecta"
+];
+const ESTUDIOS_FORMULARIO = [
+    0 => "sin estudios",
+    1 => "primaria",
+    2 => "secundaria",
+    3 => "bachillerato",
+    4 => "ciclo formativo",
+    5 => "universitarios",
+    6 => "incorrecta"
+];
 
 // Contraseña: de 8 a 15 caracteres con una mayúscula, una minúscula, una cifra
 // y un carácter especial de $ _ - ; < > @
 const REGEX_PASSWORD = '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[$_\-;<>@]).{8,15}$/u';
 
-// ======================= CONTROLADOR =======================
 
-// Cojo un dato de $_POST y lo devuelvo siempre como texto
-// Si no existe o llega un array devuelvo ""
+//controlador
+// Aquí solo se prepara la página: qué ejercicio se enseña, los datos y la barra de ubicación.
+// Las funciones que usa el controlador están más abajo (PHP las conoce aunque estén después).
+
+// Miro qué ejercicio hay que enseñar
+$ejercicio = obtenerEjercicio();
+
+// Preparo los datos del ejercicio
+$datos = ($ejercicio === "1") ? obtenerPruebasLibrerias() : obtenerDatosFormulario();
+
+// Barra de ubicación
+$ubicacion = [
+    ["TEXTO" => "Inicio", "ENLACE" => "/index.php", "ADICIONAL" => " &gt; "],
+    ["TEXTO" => "Relación 5", "ENLACE" => "index.php", "ADICIONAL" => " &gt; "],
+    ["TEXTO" => "Ejercicio " . $ejercicio],
+];
+
+//dibuja la plantilla de la vista
+inicioCabecera("Relación 5");
+cabecera();
+finCabecera();
+inicioCuerpo("Relación 5", $ubicacion);
+cuerpo($ejercicio, $datos);   // llamo a la vista y le paso los datos por parámetro
+finCuerpo();
+// **********************************************************
+ 
+// ======================= FUNCIONES DEL CONTROLADOR =======================
+
+/**
+ * Coge un dato de $_POST y lo devuelve siempre como texto.
+ * Si no existe o llega un array, devuelve una cadena vacía.
+ *
+ * @param string $campo Nombre del campo del formulario.
+ * @return string El valor enviado como texto.
+ */
 function textoPost(string $campo): string
 {
     $valor = $_POST[$campo] ?? "";
     return is_string($valor) ? $valor : "";
 }
 
-// Paso un texto dd/mm/aaaa a un objeto DateTime
-// El ! pone la hora a 00:00:00 para que solo se comparen los días
+/**
+ * Pasa un texto dd/mm/aaaa a un objeto DateTime.
+ * El ! del formato pone la hora a 00:00:00 para que solo se comparen los días.
+ *
+ * @param string $fecha Fecha ya validada con formato dd/mm/aaaa.
+ * @return DateTime La fecha como objeto.
+ */
 function crearFecha(string $fecha): DateTime
 {
     return DateTime::createFromFormat("!d/m/Y", $fecha);
 }
 
-// Miro en la URL qué ejercicio hay que enseñar (solo vale "1" o "2")
-// Si pone otra cosa dejo el 2, que es el de por defecto
+/**
+ * Mira en la URL qué ejercicio hay que enseñar (solo vale "1" o "2").
+ * Si pone otra cosa, devuelve el 2, que es el de por defecto.
+ *
+ * @return string "1" o "2".
+ */
 function obtenerEjercicio(): string
 {
     $ejercicio = $_GET["ejercicio"] ?? "2";
@@ -68,12 +121,20 @@ function obtenerEjercicio(): string
     }
     return $ejercicio;
 }
-
+ 
 // ---------- Ejercicio 1: pruebas de las librerías ----------
 
-// Pruebo una función en las dos librerías y miro si da lo que espero
-// $esperado lleva [lo que debe devolver la función (true o false),
-//                  el valor que debe quedar en la variable]
+/**
+ * Prueba una función en las dos librerías y mira si da lo que se espera.
+ * Cada librería usa su propia copia del valor porque las funciones modifican la variable.
+ *
+ * @param string $descripcion Texto que identifica la prueba.
+ * @param string $funcion Nombre de la función sin el espacio de nombres.
+ * @param array $esperado [lo que debe devolver la función (true o false), valor que debe quedar en la variable].
+ * @param mixed $valor Valor que se le pasa a la función.
+ * @param mixed ...$parametros Resto de parámetros de la función.
+ * @return array Resultado esperado y resultado de VALNORMAL y VALFILTER.
+ */
 function probar(string $descripcion, string $funcion, array $esperado, mixed $valor, mixed ...$parametros): array
 {
     [$okEsperado, $valorEsperado] = $esperado;
@@ -94,13 +155,24 @@ function probar(string $descripcion, string $funcion, array $esperado, mixed $va
         "descripcion" => $descripcion,
         "esperado" => ["ok" => $okEsperado, "valor" => $valorEsperado],
         // "pasa" es true si devuelve lo esperado y la variable queda con el valor esperado
-        "normal" => ["ok" => $okNormal, "valor" => $enNormal,
-                     "pasa" => ($okNormal === $okEsperado && $enNormal === $valorEsperado)],
-        "filter" => ["ok" => $okFilter, "valor" => $enFilter,
-                     "pasa" => ($okFilter === $okEsperado && $enFilter === $valorEsperado)],
+        "normal" => [
+            "ok" => $okNormal,
+            "valor" => $enNormal,
+            "pasa" => ($okNormal === $okEsperado && $enNormal === $valorEsperado)
+        ],
+        "filter" => [
+            "ok" => $okFilter,
+            "valor" => $enFilter,
+            "pasa" => ($okFilter === $okEsperado && $enFilter === $valorEsperado)
+        ],
     ];
 }
 
+/**
+ * Prepara todas las pruebas del ejercicio 1 y cuenta las que salen bien.
+ *
+ * @return array Con las claves filas, superadas y total.
+ */
 function obtenerPruebasLibrerias(): array
 {
     // Cada prueba lleva lo que espero que pase: [true o false, valor que queda]
@@ -132,10 +204,14 @@ function obtenerPruebasLibrerias(): array
 
     return ["filas" => $filas, "superadas" => $superadas, "total" => count($filas) * 2];
 }
-
+ 
 // ---------- Ejercicio 2: formulario ----------
 
-// Valores con los que sale el formulario la primera vez
+/**
+ * Valores con los que sale el formulario la primera vez.
+ *
+ * @return array Valores iniciales de cada campo.
+ */
 function valoresPorDefecto(): array
 {
     return [
@@ -153,8 +229,12 @@ function valoresPorDefecto(): array
     ];
 }
 
-// Valido todos los datos del formulario con las funciones de validacion.php
-// Devuelve los datos ya corregidos y los errores
+/**
+ * Valida en el servidor todos los datos del formulario del ejercicio 2.
+ * Usa las funciones de scripts/librerias/validacion.php siempre que se puede.
+ *
+ * @return array [datos ya corregidos, errores por campo].
+ */
 function validarFormulario(): array
 {
     $datos = valoresPorDefecto();
@@ -180,7 +260,7 @@ function validarFormulario(): array
         $errores["password"] = "La contraseña no puede tener más de 15 caracteres";
     } elseif (!validaExpresion($password, REGEX_PASSWORD, "")) {
         // Uso comillas simples porque con dobles PHP intenta leer $_ como una variable
-        $errores["password"] = 'La contraseña debe tener de 8 a 15 caracteres, con una mayúscula, una minúscula, una cifra y un carácter especial ($_-.;<>@)';
+        $errores["password"] = 'La contraseña debe tener de 8 a 15 caracteres, con una mayúscula, una minúscula, una cifra y un carácter especial ($_-;<>@)';
     }
     $datos["password"] = $password;
 
@@ -311,7 +391,12 @@ function validarFormulario(): array
     return [$datos, $errores];
 }
 
-// Preparo los datos del ejercicio 2
+/**
+ * Prepara los datos del ejercicio 2.
+ * La primera vez (sin pulsar enviar) devuelve los valores por defecto; si no, valida.
+ *
+ * @return array Con las claves datos, errores y correcto.
+ */
 function obtenerDatosFormulario(): array
 {
     // Si no se ha pulsado enviar (primera vez) saco el formulario con los valores por defecto
@@ -323,39 +408,23 @@ function obtenerDatosFormulario(): array
     [$datos, $errores] = validarFormulario();
     return ["datos" => $datos, "errores" => $errores, "correcto" => count($errores) === 0];
 }
-
-// ======================= CONTROLADOR (variables para la vista) =======================
-// Miro qué ejercicio hay que enseñar
-$ejercicio = obtenerEjercicio();
-
-// Preparo los datos del ejercicio
-$datos = ($ejercicio === "1") ? obtenerPruebasLibrerias() : obtenerDatosFormulario();
-
-// Barra de ubicación
-$ubicacion = [
-    ["TEXTO" => "Inicio", "ENLACE" => "/index.php", "ADICIONAL" => " &gt; "],
-    ["TEXTO" => "Relación 5", "ENLACE" => "index.php", "ADICIONAL" => " &gt; "],
-    ["TEXTO" => "Ejercicio " . $ejercicio],
-];
-
-// ****************************************************************
-// Dibujo la plantilla de la vista
-inicioCabecera("Relación 5");
-cabecera();
-finCabecera();
-inicioCuerpo("Relación 5", $ubicacion);
-cuerpo($ejercicio, $datos);   // llamo a la vista y le paso los datos por parámetro
-finCuerpo();
-// ****************************************************************
-
+ 
 // ======================= VISTA =======================
 
-// Cosas extra de la cabecera (de momento no pongo nada)
-function cabecera()
-{
-}
+/**
+ * Cosas extra de la cabecera (de momento no hay nada).
+ *
+ * @return void
+ */
+function cabecera() {}
 
-// Vista principal: según el ejercicio enseño las pruebas o el formulario
+/**
+ * Vista principal: según el ejercicio enseña las pruebas o el formulario.
+ *
+ * @param string $ejercicio "1" o "2".
+ * @param array $datos Datos preparados por el controlador.
+ * @return void
+ */
 function cuerpo(string $ejercicio, array $datos): void
 {
     mostrarEnlaces();
@@ -366,13 +435,24 @@ function cuerpo(string $ejercicio, array $datos): void
     }
 }
 
-// Escapo el texto para que lo que escriba el usuario no se interprete como HTML
+/**
+ * Escapa el texto para que lo que escriba el usuario no se interprete como HTML.
+ *
+ * @param string $texto Texto a mostrar.
+ * @return string Texto seguro para HTML.
+ */
 function esc(string $texto): string
 {
     return htmlspecialchars($texto, ENT_QUOTES, "UTF-8");
 }
 
-// Si el campo tiene un error, escribo el mensaje
+/**
+ * Si el campo tiene un error, escribe el mensaje.
+ *
+ * @param array $errores Errores por campo.
+ * @param string $campo Campo que se está pintando.
+ * @return void
+ */
 function mostrarError(array $errores, string $campo): void
 {
     if (isset($errores[$campo])) {
@@ -380,26 +460,47 @@ function mostrarError(array $errores, string $campo): void
     }
 }
 
+/**
+ * Devuelve la clase CSS del campo: lleva input-error si el campo tiene un error.
+ *
+ * @param array $errores Errores por campo.
+ * @param string $campo Campo que se está pintando.
+ * @return string Clases CSS.
+ */
 function claseCampo(array $errores, string $campo): string
 {
     return isset($errores[$campo]) ? 'for_texto input-error' : 'for_texto';
 }
 
-// Enlaces para cambiar entre el ejercicio 1 y el 2
+/**
+ * Enlaces para cambiar entre el ejercicio 1 y el 2.
+ *
+ * @return void
+ */
 function mostrarEnlaces(): void
 {
     echo '<p><a href="index.php?ejercicio=1">Ejercicio 1: pruebas de las librerías</a> | ';
     echo '<a href="index.php?ejercicio=2">Ejercicio 2: formulario</a></p>';
 }
 
-// Escribe "correcto" o "incorrecto" junto con el valor que queda
+/**
+ * Escribe "correcto" o "incorrecto" junto con el valor que queda.
+ *
+ * @param array $resultado Con las claves ok y valor.
+ * @return string Texto ya escapado.
+ */
 function textoResultado(array $resultado): string
 {
     $texto = $resultado["ok"] ? "correcto" : "incorrecto";
     return $texto . " &rarr; " . esc((string) $resultado["valor"]);
 }
 
-// Ejercicio 1: tabla con lo esperado y lo que da cada librería
+/**
+ * Ejercicio 1: tabla con lo esperado y lo que da cada librería.
+ *
+ * @param array $resultado Datos de obtenerPruebasLibrerias().
+ * @return void
+ */
 function mostrarPruebas(array $resultado): void
 {
     echo "<h2>Ejercicio 1: pruebas de las librerías</h2>";
@@ -421,8 +522,14 @@ function mostrarPruebas(array $resultado): void
     echo "</table>";
 }
 
-// Ejercicio 2: formulario
-// Recibe los valores que tengo que enseñar y los errores
+/**
+ * Ejercicio 2: dibuja el formulario.
+ * Se llama desde la vista y recibe los valores a mostrar y los errores.
+ *
+ * @param array $datos Valores que se enseñan en cada campo.
+ * @param array $errores Errores por campo.
+ * @return void
+ */
 function mostrarFormulario(array $datos, array $errores): void
 {
 ?>
@@ -470,7 +577,9 @@ function mostrarFormulario(array $datos, array $errores): void
             <?php foreach (ESTADOS_FORMULARIO as $codigo => $texto) { ?>
                 <label>
                     <input type="radio" name="estado" value="<?php echo $codigo; ?>"
-                        <?php if ($datos["estado"] === $codigo) { echo "checked"; } ?>>
+                        <?php if ($datos["estado"] === $codigo) {
+                            echo "checked";
+                        } ?>>
                     <?php echo $codigo . " - " . esc($texto); ?>
                 </label>
             <?php } ?>
@@ -481,7 +590,9 @@ function mostrarFormulario(array $datos, array $errores): void
             <?php foreach (ESTUDIOS_FORMULARIO as $codigo => $texto) { ?>
                 <label>
                     <input type="checkbox" name="estudios[]" value="<?php echo $codigo; ?>"
-                        <?php if (in_array($codigo, $datos["estudios"], true)) { echo "checked"; } ?>>
+                        <?php if (in_array($codigo, $datos["estudios"], true)) {
+                            echo "checked";
+                        } ?>>
                     <?php echo $codigo . " - " . esc($texto); ?>
                 </label>
             <?php } ?>
@@ -504,7 +615,12 @@ function mostrarFormulario(array $datos, array $errores): void
 <?php
 }
 
-// Ejercicio 2: resumen cuando todos los datos están bien
+/**
+ * Ejercicio 2: resumen que se enseña cuando todos los datos están bien.
+ *
+ * @param array $datos Datos validados.
+ * @return void
+ */
 function mostrarResumen(array $datos): void
 {
     // Paso los códigos de estudios a su texto
@@ -526,7 +642,12 @@ function mostrarResumen(array $datos): void
     echo '<p><a href="index.php?ejercicio=2">Volver al formulario</a></p>';
 }
 
-// Ejercicio 2: si no hay errores enseño el resumen y si no el formulario
+/**
+ * Ejercicio 2: si no hay errores enseña el resumen y si no el formulario.
+ *
+ * @param array $resultado Con las claves datos, errores y correcto.
+ * @return void
+ */
 function mostrarEjercicio2(array $resultado): void
 {
     if ($resultado["correcto"]) {
