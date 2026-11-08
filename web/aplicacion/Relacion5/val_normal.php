@@ -8,10 +8,10 @@
 namespace VALNORMAL;
 
 /**
- * Comprueba que $var sea un entero entre $min y $max (ambos incluidos).
+ * Compruebo que $var sea un entero entre $min y $max (ambos incluidos).
  * Como el parámetro es int, solo hace falta mirar el rango.
  *
- * @param int &$var Entero a validar. Por referencia: al terminar tiene el valor saneado o $defecto.
+ * @param int &$var Entero a validar. Por referencia: al terminar tiene el valor arreglado o $defecto.
  * @param int $min Valor mínimo permitido.
  * @param int $max Valor máximo permitido.
  * @param int $defecto Valor que se asigna si no es válido.
@@ -28,9 +28,9 @@ function validaEntero(int &$var, int $min, int $max, int $defecto): bool
 }
 
 /**
- * Comprueba que $var sea un real entre $min y $max (ambos incluidos).
+ * Compruebo que $var sea un real entre $min y $max (ambos incluidos).
  *
- * @param float &$var Real a validar. Por referencia: al terminar tiene el valor saneado o $defecto.
+ * @param float &$var Real a validar. Por referencia: al terminar tiene el valor arreglado o $defecto.
  * @param float $min Valor mínimo permitido.
  * @param float $max Valor máximo permitido.
  * @param float $defecto Valor que se asigna si no es válido.
@@ -46,10 +46,10 @@ function validaReal(float &$var, float $min, float $max, float $defecto): bool
 }
 
 /**
- * Comprueba que $var sea una fecha dd/mm/aaaa que exista.
- * Acepta 1/2/2023 y la deja saneada como 01/02/2023.
+ * Compruebo que $var sea una fecha dd/mm/aaaa que exista.
+ * Acepta 1/2/2023 y la deja arreglada como 01/02/2023.
  *
- * @param string &$var Fecha a validar. Por referencia: al terminar tiene la fecha saneada o $defecto.
+ * @param string &$var Fecha a validar. Por referencia: al terminar tiene la fecha arreglada o $defecto.
  * @param string $defecto Valor que se asigna si no es válida.
  * @return bool true si es correcta, false si no.
  */
@@ -73,10 +73,10 @@ function validaFecha(string &$var, string $defecto): bool
 }
 
 /**
- * Comprueba que $var sea una hora hh:mm:ss correcta.
- * Acepta 0:5:1 y la deja saneada como 00:05:01.
+ * Compruebo que $var sea una hora hh:mm:ss correcta.
+ * Acepta 0:5:1 y la deja arreglada como 00:05:01.
  *
- * @param string &$var Hora a validar. Por referencia: al terminar tiene la hora saneada o $defecto.
+ * @param string &$var Hora a validar. Por referencia: al terminar tiene la hora arreglada o $defecto.
  * @param string $defecto Valor que se asigna si no es válida.
  * @return bool true si es correcta, false si no.
  */
@@ -99,10 +99,10 @@ function validaHora(string &$var, string $defecto): bool
 }
 
 /**
- * Comprueba que $var sea un email con la forma aaaa@bbbb.ccc.
+ * Compruebo que $var sea un email con la forma aaaa@bbbb.ccc.
  * Solo se le quitan los espacios sobrantes; la comprobación es con una expresión regular.
  *
- * @param string &$var Email a validar. Por referencia: al terminar tiene el email saneado o $defecto.
+ * @param string &$var Email a validar. Por referencia: al terminar tiene el email arreglada o $defecto.
  * @param string $defecto Valor que se asigna si no es válido.
  * @return bool true si es correcto, false si no.
  */
@@ -120,7 +120,7 @@ function validaEmail(string &$var, string $defecto): bool
 }
 
 /**
- * Comprueba que $var no tenga más de $longitud caracteres.
+ * Compruebo que $var no tenga más de $longitud caracteres.
  * Usa mb_strlen para contar bien las tildes y las ñ.
  *
  * @param string &$var Cadena a validar. Por referencia: se deja igual si es válida o pasa a valer $defecto.
@@ -138,7 +138,7 @@ function validaCadena(string &$var, int $longitud, string $defecto): bool
 }
 
 /**
- * Comprueba que $var cumpla la expresión regular $expresion.
+ * Compruebo que $var cumpla la expresión regular $expresion.
  * Usa preg_match, que devuelve 1 si hay coincidencia.
  *
  * @param string &$var Cadena a validar. Por referencia: se deja igual si es válida o pasa a valer $defecto.
@@ -157,7 +157,7 @@ function validaExpresion(string &$var, string $expresion, string $defecto): bool
 }
 
 /**
- * Comprueba que $var sea uno de los valores de $posibles ($tipo = 1)
+ * Compruebo que $var sea uno de los valores de $posibles ($tipo = 1)
  * o una de sus claves ($tipo = 2).
  *
  * @param mixed $var Valor a buscar.

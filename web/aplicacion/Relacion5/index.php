@@ -96,7 +96,7 @@ function textoPost(string $campo): string
 }
 
 /**
- * Pasa un texto dd/mm/aaaa a un objeto DateTime.
+ * Paso un texto dd/mm/aaaa a un objeto DateTime.
  * El ! del formato pone la hora a 00:00:00 para que solo se comparen los días.
  *
  * @param string $fecha Fecha ya validada con formato dd/mm/aaaa.
