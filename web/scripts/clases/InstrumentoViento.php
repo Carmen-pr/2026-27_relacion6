@@ -1,50 +1,92 @@
 <?php
 declare(strict_types=1);
-
+ 
+/**
+ * Instrumento de viento. HEREDA de InstrumentoBase ("extends"): ya tiene
+ * descripción, edad, envejecer()... sin volver a escribirlos.
+ * Sigue siendo abstracta porque todavía falta sonido() (lo escribe Flauta).
+ */
 abstract class InstrumentoViento extends InstrumentoBase
 {
-    // El material se conserva protegido para las clases concretas, sin getter ni setter.
+    // Solo visible para esta clase y sus hijas. No hay getter ni setter a propósito.
     protected string $_material = 'madera';
-
+ 
+    /**
+     * @param string $material Material del instrumento (no puede estar vacío).
+     * @param int $edad Años del instrumento.
+     * @throws InvalidArgumentException Si el material está vacío.
+     */
     public function __construct(string $material = 'madera', int $edad = 15)
     {
         if (mb_strlen(trim($material)) === 0) {
             throw new InvalidArgumentException('El material no puede estar vacío.');
         }
-
-        // Todos los instrumentos de viento comparten la misma descripción base.
+ 
+        // parent:: llama a un método de la clase padre. Aquí ejecuta el constructor
+        // de InstrumentoBase, que guarda la descripción y la edad.
         parent::__construct('instrumento de viento', $edad);
         $this->_material = trim($material);
     }
-
-    // La afinación es común a todos los instrumentos de viento.
+ 
+    /**
+     * Implementa afinar() para TODOS los instrumentos de viento.
+     * "final" impide que las clases hijas lo vuelvan a escribir.
+     *
+     * @return string
+     */
     final public function afinar(): string
     {
         return 'El instrumento de viento está afinado.';
     }
-
-    // Se añade el material al texto descriptivo heredado.
+ 
+    /**
+     * Amplía el texto del padre: coge el suyo (parent::__toString()) y añade el material.
+     *
+     * @return string
+     */
     public function __toString(): string
     {
         return parent::__toString() . " Instrumento de material {$this->_material}";
     }
-
-    // Se mantienen bloqueados los accesos dinámicos en esta clase intermedia.
+ 
+    // Se repiten los métodos mágicos para dejar claro que esta clase también
+    // prohíbe propiedades que no existen (ver comentarios en InstrumentoBase).
+ 
+    /**
+     * @param string $nombre
+     * @return never
+     * @throws Exception
+     */
     public function __get(string $nombre): never
     {
         throw new Exception("No existe la propiedad $nombre");
     }
-
+ 
+    /**
+     * @param string $nombre
+     * @param mixed $valor
+     * @return void
+     * @throws Exception
+     */
     public function __set(string $nombre, mixed $valor): void
     {
         throw new Exception("No existe la propiedad $nombre");
     }
-
+ 
+    /**
+     * @param string $nombre
+     * @return bool
+     */
     public function __isset(string $nombre): bool
     {
         return false;
     }
-
+ 
+    /**
+     * @param string $nombre
+     * @return void
+     * @throws Exception
+     */
     public function __unset(string $nombre): void
     {
         throw new Exception("No existe la propiedad $nombre");
