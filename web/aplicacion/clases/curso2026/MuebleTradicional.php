@@ -3,14 +3,6 @@ include_once(dirname(__FILE__) . "/cabecera.php");
 //controlador 
 // en el conmtrolador solo va los conroladores lo demas va abajo, en el controlador va la esructura de la pagina, el resto va en la vista
 
-abstract class MuebleBase 
-{
-    //Definicion de la constante Maximo_Muebles.
-    public const Maximo_Muebles=10;
-    private static int $_propPrivada;
-    
-};
-
 
 
 

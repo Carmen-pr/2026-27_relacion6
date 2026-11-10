@@ -13,18 +13,12 @@ if (MODO_TRABAJO=="produccion")
     else 
         error_reporting(E_ALL);  
 
+    //Aqui esta se garantiza la autocarga
 spl_autoload_register(function ($clase){
-    $ruta=RUTABASE."/scripts/clases/";
-    $fichero=$ruta."$clase.php";
-    
-    if (file_exists($fichero))
-        {
-            require_once($fichero);
-        }
-      else
-        {
-            throw new Exception("La clase $clase no se ha encontrado.");
-        }
+   $ruta = __DIR__ . '/aplicacion/clases/curso2026/' . $clase . '.php';
+     if (file_exists($ruta)) {
+        require_once $ruta;
+    }
 });
 
 include(RUTABASE."/aplicacion/plantilla/plantilla.php");
