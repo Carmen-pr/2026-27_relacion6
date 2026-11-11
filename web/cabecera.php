@@ -13,7 +13,7 @@ if (MODO_TRABAJO=="produccion")
     else 
         error_reporting(E_ALL);  
 
-    //Aqui esta se garantiza la autocarga
+    //Aqui se garantiza la autocarga
 spl_autoload_register(function ($clase){
    $ruta = __DIR__ . '/aplicacion/clases/curso2026/' . $clase . '.php';
      if (file_exists($ruta)) {

@@ -96,10 +96,90 @@ abstract class MuebleBase
         return true;
     }
 
-
+    public function setPais(mixed $pais): bool 
+    {
+        if (!is_string($pais)) return false;
+        try {
+            if (!validaCadena($pais, 20, 'ESPAÑA')) return false;
+        } catch (TypeError $e) {
+            return false;
+        }
+        $this->pais = mb_strtoupper($pais);
+        return true;
+    }
     
+    public function setAnio(mixed $anio): bool
+    {
+        try {
+            if (!validaEntero($anio, 2020, (int) date('Y'), 2020)) return false;
+
+        } catch (TypeError $e) {
+            return false;
+        $this->anio = $anio;
+        return true;
+        }
+    }
+
+    public function setFechaIniVenta(mixed $fecha): bool
+    {
+        if (!is_string($fecha)) return false;
+        try {
+            if (!validaFecha($fecha, '')) return false; // $fecha queda normalizada dd/mm/aaaa
+        } catch (TypeError $e) {
+            return false;
+        }
+        // No puede ser anterior al 1 de enero del año de fabricación
+        if ($this->aFecha($fecha) < $this->aFecha('01/01/' . $this->anio)) return false;
+        $this->fechaIniVenta = $fecha;
+        return true;
+    }
+
+    public function setFechaFinVenta(mixed $fecha): bool
+    {
+        if (!is_string($fecha)) return false;
+        try {
+            if (!validaFecha($fecha, '')) return false; // $fecha queda normalizada dd/mm/aaaa
+        } catch (TypeError $e) {
+            return false;
+        }
+        // No puede ser anterior a la fecha de inicio de venta
+        if ($this->aFecha($fecha) < $this->aFecha($this->fechaIniVenta)) return false;
+        $this->fechaFinVenta = $fecha;
+        return true;
+    }
+
+    public function setPrecio(mixed $precio): bool
+    {   
+        try {
+            if (!validaReal($precio, 30, PHP_FLOAT_MAX, 30)) return false;
+        } catch (TypeError $e) {
+            return false;
+        }
+       $this->precio = $precio;
+       return true;
+    }
+
+
+
+
+
 }
 
+
+
+
+
+
+
+
+
+
+
+
+private function aFecha(string $fecha): DateTime
+    {
+        return DateTime::createFromFormat('!d/m/Y', $fecha);
+    }
 
 
 
