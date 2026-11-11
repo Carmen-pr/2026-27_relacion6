@@ -62,7 +62,7 @@ abstract class MuebleBase
         self::$mueblesCreados++;
     }
 
-    // ===================== SET =====================
+// ===================== SET =====================
 
     public function setNombre(mixed $nombre): bool
     {
@@ -159,27 +159,85 @@ abstract class MuebleBase
        return true;
     }
 
+// ===================== GET =====================
 
+    public function getNombre(): string {return $this->nombre;}
+    public function getFabricante(): string {return $this->fabricante;}
+    public function getPais(): string {return $this->pais;}
+    public function getAnio(): string {return $this->anio;}
+    public function getFechaIniVenta(): string {return $this->fechaIniVenta;}
+    public function getFechaFinVenta(): string {return $this->fechaFinVenta;}
+    public function getPrecio(): string {return $this->precio;}
 
+// ============ SIN SOBRECARGA DINÁMICA ============
+// Estos métodos solo se ejecutan si alguien intenta tocar una propiedad
+// que no existe o que es privada desde fuera.
 
+    public function __set(string $nombre, mixed $valor): void
+    {
+        throw new Exception("No se puede asignar la propiedad '$nombre' directamente. Usa los métodos set");
+    }
 
-}
+    public function __get(string $nombre): mixed
+    {
+        throw new Exception("No se puede leer la propiedad '$nombre' directamente. Usa los métodos get");
+    }
 
+// ===================== OTROS =====================
 
+    /** Las clases hijas lo redefinen: nombres de sus propiedades adicionales. */
+    public function damePropiedadesAdicionales(): array
+    {
+        return [];
+    }
 
+    /**
+     * Método de clase: ¿se pueden crear más muebles?
+     * @param int &$numero Se rellena con los muebles que aún se pueden crear.
+     */
+    public static function puedeCrear(&$numero): bool
+    {
+        $numero = self::MAXIMO_MUEBLES - self::$mueblesCreados;
+        return $numero > 0;
+    }
 
+    /** Añade pares (nombre, valor). Si sobra un argumento (número impar), se descarta. */
+    public function anadirCaracteristicas(mixed ...$args): void
+    {
+        for ($i = 0; $i + 1 < count($args); $i += 2) {
+            $nombre = (string) $args[$i];
+            $this->caracteristicas->$nombre = $args[$i + 1];   // dispara __set de Caracteristicas
+        }
+    }
 
+    public function getCaracteristicas(): Caracteristicas
+    {
+        return $this->caracteristicas;
+    }
 
+    public function __toString(): string
+    {
+        $texto = "MUEBLE de clase " . get_class($this)
+            . " con nombre {$this->nombre}, fabricante {$this->fabricante}"
+            . ", fabricado en {$this->pais} a partir del año {$this->anio}"
+            . ", vendido desde {$this->fechaIniVenta} hasta {$this->fechaFinVenta}"
+            . ", precio {$this->precio}";
 
+        // Propiedades de la clase hija (funciona para cualquier hija)
+        foreach ($this->damePropiedadesAdicionales() as $propiedad) {
+            $get = 'get' . $propiedad;
+            $texto .= ", $propiedad " . $this->$get();
+        }
+        return $texto . ". Características: " . $this->caracteristicas;
+    }
 
-
-
-
-
-private function aFecha(string $fecha): DateTime
+    // Convierte "dd/mm/aaaa" en un objeto fecha para poder comparar
+    private function aFecha(string $fecha): DateTime
     {
         return DateTime::createFromFormat('!d/m/Y', $fecha);
     }
+
+}
 
 
 
