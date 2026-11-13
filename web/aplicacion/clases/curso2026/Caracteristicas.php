@@ -8,11 +8,11 @@ include_once(dirname(__FILE__) . "/cabecera.php");
 
 
 
-$barra=[
+$barra = [
     [
-        "TEXTO"=> "inicio", 
+        "TEXTO" => "inicio",
         "ENLACE" => "/index.php",
-        "ADICIONAL" =>""
+        "ADICIONAL" => ""
     ],
 ];
 
@@ -26,16 +26,16 @@ finCuerpo();
 // **********************************************************
 
 //vista
-function cabecera() 
+function cabecera()
 {
-    ?>
+?>
     <?php
 }
 
 //vista
 function cuerpo()
 {
-?>
+    ?>
 <?php
 
 

@@ -351,7 +351,7 @@ abstract class MuebleBase
             $texto .= ", $propiedad " . $this->$getter();
         }
 
-        return $texto . ". Características: " . $this->caracteristicas;
+        return $texto . ". Caracteristicas: " . $this->caracteristicas;
     }
 
     // ===================== AUXILIARES =====================
