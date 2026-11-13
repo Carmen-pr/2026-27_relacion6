@@ -3,11 +3,11 @@ include_once(dirname(__FILE__) . "/cabecera.php");
 //controlador 
 // en el conmtrolador solo va los conroladores lo demas va abajo, en el controlador va la esructura de la pagina, el resto va en la vista
 
-$barra=[
+$barra = [
     [
-        "TEXTO"=> "inicio", 
+        "TEXTO" => "inicio",
         "ENLACE" => "/index.php",
-        "ADICIONAL" =>""
+        "ADICIONAL" => ""
     ],
 ];
 
@@ -21,11 +21,11 @@ finCuerpo();
 // **********************************************************
 
 //vista
-function cabecera() 
+function cabecera()
 {
-    ?>
-    <!-- esto va en el head -->  
-     <?php
+?>
+    <!-- esto va en el head -->
+<?php
 }
 
 //vista
@@ -34,7 +34,7 @@ function cuerpo()
 ?>
     <!-- Contenedor que aplica el diseño de botón moderno -->
     <div class="lista-ejercicios">
-        <a href="./aplicacion/pruebas/index.php">Acceso a pruebas</a>
+        <a href="./aplicacion/clases/curso2026/index.php">Relacion 6</a>
     </div>
 <?php
 }
