@@ -1,376 +1,535 @@
-@charset "UTF8";
+@charset "UTF-8";
 
-/* --- 1. CONFIGURACIÓN GENERAL --- */
+/* --- 1. CONFIGURACIÓN GENERAL (ESTÉTICA TIENDA DE MOBILIARIO) --- */
 body {
-    background-color: #0284C7; /* Azul técnico vibrante y agradable de fondo */
+    background-color: #F4F1EA; /* Fondo arena/crema cálido y acogedor */
+    color: #2C2A29;            /* Texto carbón suave para lectura cómoda */
     font-size: 16px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipografía moderna y limpia */
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-/* Quitar el subrayado por defecto de todos los enlaces, 
-le he puesto tambien !important, para que lo haga si o si */
 a, a:hover {
     text-decoration: none !important;
 }
 
 
-/* --- 2. CABECERA Y LOGOTIPO --- */
+/* --- 2. CONTENEDOR PRINCIPAL (TARJETA) --- */
+#documento {
+    margin: 32px auto;
+    background-color: #FFFFFF;
+    max-width: 1100px;
+    padding: 28px 34px;
+    border: 1px solid #E5DFD3;
+    border-top: 5px solid #2D5A4C; /* Acento superior verde bosque/salvia */
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(44, 42, 41, 0.08);
+}
+
+
+/* --- 3. CABECERA Y LOGOTIPO --- */
 header {
-    display: flex;          /* Coloca imagen y título en la misma fila */
-    align-items: center;    /* Los centra verticalmente */
-    gap: 15px;              /* Separación entre la imagen y el título */
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 #punto-seguro img {
-    display: block;         /* Quita el hueco inferior de la imagen */
-    transition: filter 0.2s;/* Animación suave */ 
+    display: block;
+    transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 #punto-seguro:hover img {
-     filter: brightness(0.7);/* Oscurece sutilmente el logo al pasar el cursor */
+    transform: scale(1.04);
+    filter: brightness(0.92);
 }
 
 #cabecera {
-    background-color: #EEF2F6;                  /* Fondo gris/azul muy suave para la cabecera */
-    padding: 10px;
-    border-radius: 8px;
+    background-color: #FAF8F5;
+    padding: 14px 20px;
+    border: 1px solid #EBE5D8;
+    border-radius: 10px;
 }
 
 #cabecera #logo {
-    width: 75px;
-    height: 50px;
+    width: 65px;
+    height: 45px;
+    object-fit: contain;
 }
 
 #cabecera #titulo {
-    font-size: 1.3em;
-    font-style: italic;
-    color: #4F46E5;                             /* Tono índigo vibrante para el título de la app */
-    font-weight: bold;
-}
-
-
-/* --- 3. CONTENEDOR PRINCIPAL (TARJETA) --- */
-#documento {
-    margin: 30px auto;                          /* Separación superior/inferior y centrado en pantalla */
-    background-color: #FFFFFF;                  /* Blanco puro para el fondo de los ejercicios */
-    max-width: 1100px;                          /* Ancho máximo de la tarjeta */
-    padding: 20px;                              /* Espaciado interno */
-    border: 3px solid #777BB4;                  /* Borde grueso con el color púrpura de PHP */
-    border-radius: 12px;                        /* Esquinas redondeadas */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);/* Sombra pronunciada para dar volumen sobre el fondo azul */
+    font-size: 1.5em;
+    font-style: normal;
+    letter-spacing: 0.04em;
+    color: #2D5A4C; /* Verde bosque elegante */
+    font-weight: 800;
 }
 
 
 /* --- 4. BARRA DE MENÚ SUPERIOR Y UBICACIÓN --- */
 #barraMenu ul {
     list-style-type: none;
-    margin: 20px 0 10px 0;
-    padding: 8px 8px 0;
+    margin: 22px 0 14px 0;
+    padding: 0;
     display: flex;
     align-items: flex-end;
-    gap: 4px;
+    gap: 6px;
     flex-wrap: wrap;
-    background-color: #FFFFFF !important;        /* Forzamos el fondo de la barra a blanco puro */
-    border-bottom: 2px solid #777BB4;           /* Línea inferior morada para cerrar el menú */
-    border-radius: 8px 8px 0 0;
+    background-color: transparent !important;
+    border-bottom: 2px solid #E5DFD3;
 }
 
-/* Las opciones del menú tienen aspecto de pestañas del navegador. */
 #barraMenu a {
     text-decoration: none;
     display: inline-block;
-    padding: 9px 16px;
-    background-color: #FFFFFF !important;        /* Forzamos las pestañas inactivas a blanco puro */
-    color: #475569;                             /* Texto gris oscuro para buen contraste */
-    font-weight: bold;
-    border: 1px solid #E2E8F0;                  /* Borde gris muy suave */
+    padding: 10px 18px;
+    background-color: #FAF8F5 !important;
+    color: #5C5752;
+    font-weight: 600;
+    border: 1px solid #E5DFD3;
     border-bottom: 0;
     border-radius: 8px 8px 0 0;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-/* Al pasar el ratón, la pestaña se destaca cambiando a fondo morado con texto blanco. */
 #barraMenu a:hover,
 #barraMenu a:focus-visible {
-    background-color: #777BB4 !important;        /* Fondo morado PHP */
-    color: #FFFFFF !important;                  /* Texto en blanco */
-    border-color: #777BB4 !important;           /* Borde morado integrado */
+    background-color: #EBF2EF !important;
+    color: #2D5A4C !important;
+    border-color: #C7D8D2 !important;
 }
 
-/* Estilo para marcar como activa la pestaña correspondiente a la página actual (Click / Activa). */
 #barraMenu a.activa {
     position: relative;
-    background-color: #777BB4 !important;        /* Fondo morado PHP */
-    color: #FFFFFF !important;                  /* Texto en blanco */
-    border-color: #777BB4 !important;
-    margin-bottom: -2px;                        /* Ajuste sutil para solapar el borde inferior */
+    background-color: #2D5A4C !important;
+    color: #FFFFFF !important;
+    border-color: #2D5A4C !important;
+    margin-bottom: -2px;
 }
 
-/* ESTILOS MODIFICADOS: Barra de ubicación (Migas de pan / Breadcrumbs) */
+/* Migas de pan */
 #barraUbicacion {
-    background-color: #F1F5F9;                  /* Fondo claro para la barra de migas de pan */
-    color: #4F46E5;                             /* Texto base en color índigo */
-    padding: 8px 16px;                          /* Espaciado interno para darle altura y aire */
-    border-radius: 6px;                         /* Esquinas redondeadas suaves */
-    font-size: 0.95em;                          /* Tamaño de fuente equilibrado */
-    margin-bottom: 20px;                        /* Separación con el contenido inferior */
-    display: inline-block;                      /* Ajuste de contenedor al contenido */
+    background-color: #FAF8F5;
+    color: #7A6348; /* Tono madera roble */
+    border: 1px solid #EBE5D8;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+    display: inline-block;
 }
 
-/* Estilo para los enlaces de navegación dentro de la ubicación */
 #barraUbicacion a {
-    color: #4F46E5;                             /* Mantiene el tono índigo vibrante */
-    font-weight: 500;
+    color: #2D5A4C;
+    font-weight: 600;
 }
 
 #barraUbicacion a:hover {
-    text-decoration: underline;                 /* Subrayado sutil al pasar el cursor */
+    text-decoration: underline !important;
 }
 
-/* Estilo para el separador interactivo entre apartados */
 #barraUbicacion .separador {
-    color: #94A3B8;                             /* Gris claro para el elemento divisorio */
-    margin: 0 8px;                              /* Separación horizontal simétrica */
+    color: #B5ADA0;
+    margin: 0 8px;
 }
 
-/* Limpieza de selectores generales de navegación */
 nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
-nav ul li {
-    display: block;
-    margin: 0;
+
+/* --- 5. TÍTULOS DE SECCIÓN --- */
+h2, h3, .subtitulo-seccion {
+    color: #1F3A32;
+    font-size: 1.3em;
+    font-weight: 700;
+    margin: 28px 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #EBE5D8;
+    letter-spacing: -0.01em;
 }
 
 
-/* --- 5. SUBTÍTULO DE SECCIÓN ELEGANTE --- */
-.subtitulo-seccion {
-    color: #1E293B;                             /* Azul pizarra muy oscuro y profesional */
-    font-size: 1.25em;                          /* Tamaño equilibrado */
-    font-weight: 700;                           /* Texto en negrita clara */
-    margin: 25px 0 15px 0;                      /* Espaciado perfecto para dar aire */
-    padding-bottom: 6px;                        /* Distancia con la línea inferior */
-    border-bottom: 2px solid #E2E8F0;           /* Línea sutil gris debajo del título */
-    letter-spacing: -0.02em;                    /* Estilo moderno de espaciado de letras */
-}
-
-
-/* --- 6. SUBBOTONES PARA LISTADO DE EJERCICIOS (INDEX.PHP) --- */
-.lista-ejercicios {
-    display: flex;
-    flex-direction: column;   /* Alinea los botones uno debajo de otro */
-    gap: 8px;                 /* Controla el espaciado exacto (reemplaza los <br>) */
-    margin: 5px 0 15px 0;
-    max-width: 450px;         /* Ancho ideal adaptado a los textos */
-}
-
-/* Estilo base para cada subbotón de la lista */
-.lista-ejercicios a {
-    display: block;
-    padding: 10px 16px;
-    background-color: #F8FAFC;   /* Fondo claro muy limpio */
-    color: #4F46E5;             /* Texto índigo */
-    font-weight: 600;
-    border-left: 4px solid #777BB4; /* Pestaña lateral izquierda con el color PHP */
-    border-top: 1px solid #E2E8F0;
-    border-right: 1px solid #E2E8F0;
-    border-bottom: 1px solid #E2E8F0;
-    border-radius: 0 6px 6px 0; /* Bordes redondeados únicamente en el lado derecho */
-    transition: all 0.2s ease-in-out;
-}
-
-/* Efecto dinámico morado/índigo al pasar el cursor sobre los subbotones */
-.lista-ejercicios a:hover {
-    background-color: #F5F3FF;   /* Un fondo lila muy suave */
-    color: #4F46E5;             /* El texto se mantiene en el índigo corporativo */
-    border-left-color: #4F46E5;  /* La barra lateral izquierda se ilumina en índigo eléctrico */
-    padding-left: 22px;          /* Desplazamiento dinámico hacia la derecha */
-}
-
-
-/* --- 7. BOTONES GENERALES DE ACCIÓN (CREAR / ENVIAR) --- */
-.boton {
-    background-color: #777BB4;                  /* Fondo morado corporativo PHP */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 4px 12px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.boton a, 
-.boton a:visited {
-    text-decoration: none;
-    color: white;
-}
-
-.boton a:hover, 
-.boton:hover {
-    background-color: #4F46E5;                  /* Cambia a índigo eléctrico en hover */
-    color: white;
-}
-
-
-/* --- 8. TABLAS DE RESULTADOS --- */
-.tabla {
+/* --- 6. TABLA DE CATÁLOGO DE MUEBLES --- */
+table, .tabla {
     width: 100%;
-    border-collapse: collapse;
-    border: none;
-    background-color: white;
-}
-
-.tabla th {
-    background-color: #777BB4;                  /* Cabecera de la tabla morada PHP */
-    color: white;                               /* Contraste en blanco */
-}
-
-/* Más espacio y texto más legible en las celdas.
-   !important porque la tabla del ejercicio 1 lleva estilos en línea en el PHP */
-.tabla {
-    table-layout: auto !important;              /* Cada columna se ajusta a su contenido */
-    border-spacing: 0 !important;               /* Sin huecos: las filas se separan con una línea */
-    font-size: 1.05em;
-}
-
-.tabla th,
-.tabla td {
-    padding: 14px 18px !important;              /* Más aire dentro de cada celda */
-    text-align: left;
-    overflow-wrap: anywhere;                    /* El texto largo se parte en vez de pisar la columna de al lado */
-}
-
-.tabla td {
-    color: #1E293B;                             /* Texto oscuro para que se lea bien */
-    border-bottom: 1px solid #CBD5E1;           /* Línea que separa cada fila */
-    border-right: 1px solid #E2E8F0;            /* Línea que separa cada columna */
-}
-
-.tabla td:last-child {
-    border-right: none;
-}
-
-.tabla tr:nth-child(even) td {
-    background-color: #F8FAFC;                  /* Filas alternas para seguir cada línea */
-}
-
-.tabla td:first-child {
-    min-width: 260px;                           /* La columna de la prueba es la más larga */
-    font-family: Consolas, 'Courier New', monospace; /* Código en tipografía de código */
-    font-size: 0.95em;
-}
-
-.tabla td.error {
-    background-color: #FEE2E2 !important;       /* Las pruebas que fallan siguen en rojo */
-}
-
-.tabla tr.par {
-    background-color: #E0F2FE;                  /* Filas alternas en tono azul celeste */
-    color: #0369A1;                             /* Texto azul oscuro legible */
-}
-
-.tabla-validaciones-contenedor {
-    max-width: 100%;
-    margin: 20px 0;
-    overflow-x: auto;
-}
-
-.tabla-validaciones {
-    width: 100%;
-    min-width: 780px;
     border-collapse: separate;
     border-spacing: 0;
-    color: #334155;
+    margin: 16px 0 24px 0;
+    background-color: #FFFFFF;
+    border: 1px solid #E5DFD3;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+table th, .tabla th {
+    background-color: #2D5A4C;
+    color: #FFFFFF;
+    font-weight: 600;
     text-align: left;
+    padding: 12px 15px;
+    font-size: 0.95em;
+    letter-spacing: 0.02em;
+    border: none;
 }
 
-.tabla-validaciones th,
-.tabla-validaciones td {
-    padding: 12px 14px;
-    border-bottom: 1px solid #E2E8F0;
-    vertical-align: middle;
-}
-
-.tabla-validaciones th {
-    background-color: #EEF2FF;
-    color: #3730A3;
+table td, .tabla td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #F0ECE3;
+    border-left: none;
+    border-right: none;
+    color: #3A3735;
     font-size: 0.95em;
 }
 
-.tabla-validaciones th:first-child {
-    border-radius: 8px 0 0 0;
+table tr:last-child td, .tabla tr:last-child td {
+    border-bottom: none;
 }
 
-.tabla-validaciones th:last-child {
-    border-radius: 0 8px 0 0;
+/* Filas alternas y efecto hover */
+table tbody tr:nth-child(even), .tabla tbody tr:nth-child(even) {
+    background-color: #FCFBF9;
 }
 
-.tabla-validaciones tbody tr:nth-child(even) {
-    background-color: #F8FAFC;
-}
-
-.tabla-validaciones tbody tr:hover {
-    background-color: #EEF2FF;
-}
-
-.tabla-validaciones td:nth-child(2) {
-    min-width: 230px;
-}
-
-.tabla-validaciones td:nth-child(3),
-.tabla-validaciones td:nth-child(5) {
-    white-space: nowrap;
+table tbody tr:hover, .tabla tbody tr:hover {
+    background-color: #F1F6F4;
+    transition: background-color 0.15s ease;
 }
 
 
-/* --- 9. FORMULARIOS Y ALERTAS --- */
-#pie {
-    background-color: #F8FAFC;
-    color: #475569;
-    font-size: 1.1em;
-    padding: 8px;
-    border-top: 2px solid #E2E8F0;
-}
-
-.for_texto {
-    border: #777BB4 2px solid;                  /* Inputs con el borde morado PHP */
-    background-color: white;
-    padding: 4px;
-    margin: 2px;
-    border-radius: 4px;
+/* --- 7. FORMULARIOS, SELECTOR Y BOTONES --- */
+select, input[type="text"], input[type="number"] {
+    padding: 9px 14px;
+    font-size: 0.95em;
+    font-family: inherit;
+    color: #2C2A29;
+    background-color: #FAF8F5;
+    border: 1px solid #D4CCC0;
+    border-radius: 8px;
+    outline: none;
+    margin-right: 8px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.for_texto.input-error {
-    border-color: #EF4444;
-    background-color: #FFF7F7;
-    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.12);
+select:focus, input[type="text"]:focus, input[type="number"]:focus {
+    border-color: #2D5A4C;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(45, 90, 76, 0.15);
 }
 
-.campo-form {
-    margin-bottom: 14px;
-}
-
-.campo-form label {
-    display: inline-block;
-    min-width: 200px;
-    margin-right: 10px;
-}
-
-.error {
-    display: block;
-    width: min(100%, 520px);
-    background-color: #FEE2E2;
-    color: #991B1B;
-    border: 2px solid #EF4444;
-    padding: 8px 12px;
+button, input[type="submit"], input[type="button"], .boton {
+    background-color: #2D5A4C;
+    color: #FFFFFF;
+    border: none;
     border-radius: 8px;
-    line-height: 1.35;
+    padding: 9px 18px;
+    font-size: 0.95em;
     font-weight: 600;
-    box-sizing: border-box;
-    white-space: normal;
-    margin-top: 6px;
+    font-family: inherit;
+    cursor: pointer;
+    margin-right: 6px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover, input[type="submit"]:hover, input[type="button"]:hover, .boton:hover {
+    background-color: #1F4036;
+    color: #FFFFFF;
+}
+
+button:active, input[type="submit"]:active, .boton:active {
+    transform: translateY(1px);
+}
+
+/* Segundo botón (ej. Modificar Mueble) en tono madera cálida */
+input[type="submit"]:nth-of-type(2),
+button:nth-of-type(2) {
+    background-color: #8C6D46;
+}
+
+input[type="submit"]:nth-of-type(2):hover,
+button:nth-of-type(2):hover {
+    background-color: #6F5535;
+}
+
+
+/* --- 8. PIE DE PÁGINA --- */
+footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #EBE5D8;
+    color: #7D776E;
+    font-size: 0.88em;
+    text-align: center;
+}
+
+@charset "UTF-8";
+
+/* --- 1. CONFIGURACIÓN GENERAL (ESTÉTICA NÓRDICA CON ACENTO AZUL) --- */
+body {
+    background-color: #EBF1F6; /* Fondo azul hielo muy suave y limpio */
+    color: #1E293B;            /* Gris pizarra oscuro para lectura cómoda */
+    font-size: 16px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+a, a:hover {
+    text-decoration: none !important;
+}
+
+
+/* --- 2. CONTENEDOR PRINCIPAL (TARJETA) --- */
+#documento {
+    margin: 32px auto;
+    background-color: #FFFFFF;
+    max-width: 1100px;
+    padding: 28px 34px;
+    border: 1px solid #D5E1EC;
+    border-top: 5px solid #0284C7; /* Acento superior azul a juego con Punto Seguro */
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(15, 42, 74, 0.08);
+}
+
+
+/* --- 3. CABECERA Y LOGOTIPO --- */
+header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+#punto-seguro img {
+    display: block;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+#punto-seguro:hover img {
+    transform: scale(1.06);
+    filter: brightness(0.95);
+}
+
+#cabecera {
+    background-color: #F4F8FB;
+    padding: 14px 20px;
+    border: 1px solid #DCE7F2;
+    border-radius: 10px;
+}
+
+#cabecera #logo {
+    width: 65px;
+    height: 45px;
+    object-fit: contain;
+}
+
+#cabecera #titulo {
+    font-size: 1.5em;
+    font-style: normal;
+    letter-spacing: 0.04em;
+    color: #0F2A4A; /* Azul marino profundo */
+    font-weight: 800;
+}
+
+
+/* --- 4. BARRA DE MENÚ SUPERIOR Y UBICACIÓN --- */
+#barraMenu ul {
+    list-style-type: none;
+    margin: 22px 0 14px 0;
+    padding: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    flex-wrap: wrap;
+    background-color: transparent !important;
+    border-bottom: 2px solid #D5E1EC;
+}
+
+#barraMenu a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 18px;
+    background-color: #F4F8FB !important;
+    color: #475569;
+    font-weight: 600;
+    border: 1px solid #D5E1EC;
+    border-bottom: 0;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s ease;
+}
+
+#barraMenu a:hover,
+#barraMenu a:focus-visible {
+    background-color: #E0F2FE !important;
+    color: #0284C7 !important;
+    border-color: #BAE6FD !important;
+}
+
+#barraMenu a.activa {
+    position: relative;
+    background-color: #0284C7 !important; /* Azul principal vibrante */
+    color: #FFFFFF !important;
+    border-color: #0284C7 !important;
+    margin-bottom: -2px;
+}
+
+/* Migas de pan */
+#barraUbicacion {
+    background-color: #F0F7FF;
+    color: #0369A1;
+    border: 1px solid #BAE6FD;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+#barraUbicacion a {
+    color: #0284C7;
+    font-weight: 600;
+}
+
+#barraUbicacion a:hover {
+    text-decoration: underline !important;
+}
+
+#barraUbicacion .separador {
+    color: #94A3B8;
+    margin: 0 8px;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* --- 5. TÍTULOS DE SECCIÓN --- */
+h2, h3, .subtitulo-seccion {
+    color: #0F2A4A;
+    font-size: 1.3em;
+    font-weight: 700;
+    margin: 28px 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #E2E8F0;
+    letter-spacing: -0.01em;
+}
+
+
+/* --- 6. TABLA DE CATÁLOGO DE MUEBLES --- */
+table, .tabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 16px 0 24px 0;
+    background-color: #FFFFFF;
+    border: 1px solid #D5E1EC;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(15, 42, 74, 0.04);
+}
+
+table th, .tabla th {
+    background-color: #163A5F; /* Azul marino elegante para cabecera de tabla */
+    color: #FFFFFF;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 15px;
+    font-size: 0.95em;
+    letter-spacing: 0.02em;
+    border: none;
+}
+
+table td, .tabla td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #EBF1F6;
+    border-left: none;
+    border-right: none;
+    color: #334155;
+    font-size: 0.95em;
+}
+
+table tr:last-child td, .tabla tr:last-child td {
+    border-bottom: none;
+}
+
+/* Filas alternas y efecto hover azulado */
+table tbody tr:nth-child(even), .tabla tbody tr:nth-child(even) {
+    background-color: #F8FAFC;
+}
+
+table tbody tr:hover, .tabla tbody tr:hover {
+    background-color: #EFF6FF;
+    transition: background-color 0.15s ease;
+}
+
+
+/* --- 7. FORMULARIOS, SELECTOR Y BOTONES --- */
+select, input[type="text"], input[type="number"] {
+    padding: 9px 14px;
+    font-size: 0.95em;
+    font-family: inherit;
+    color: #1E293B;
+    background-color: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    outline: none;
+    margin-right: 8px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+select:focus, input[type="text"]:focus, input[type="number"]:focus {
+    border-color: #0284C7;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+button, input[type="submit"], input[type="button"], .boton {
+    background-color: #0284C7; /* Azul a juego con Punto Seguro */
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-size: 0.95em;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    margin-right: 6px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover, input[type="submit"]:hover, input[type="button"]:hover, .boton:hover {
+    background-color: #0369A1;
+    color: #FFFFFF;
+}
+
+button:active, input[type="submit"]:active, .boton:active {
+    transform: translateY(1px);
+}
+
+/* Segundo botón (ej. Modificar Mueble) en tono madera roble cálida para contraste */
+input[type="submit"]:nth-of-type(2),
+button:nth-of-type(2) {
+    background-color: #8C6D46;
+}
+
+input[type="submit"]:nth-of-type(2):hover,
+button:nth-of-type(2):hover {
+    background-color: #6F5535;
+}
+
+
+/* --- 8. PIE DE PÁGINA --- */
+footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #E2E8F0;
+    color: #64748B;
+    font-size: 0.88em;
+    text-align: center;
 }
