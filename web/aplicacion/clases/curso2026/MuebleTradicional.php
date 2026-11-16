@@ -32,11 +32,12 @@ final class MuebleTradicional extends MuebleBase
         string $fechaFin = '31/12/2040',
         float $precio = 30,
         float $peso = 15,
-        string $serie = 'S01'
+        string $serie = 'S01',
+        int $material = 10,
     ) {
         // El constructor del padre se ocupa de todo lo básico: comprobar el máximo,
         // validar el nombre, poner valores por defecto y contar el mueble.
-        parent::__construct($nombre, $fabricante, $pais, $anio, $fechaIni, $fechaFin, $precio);
+        parent::__construct($nombre, $fabricante, $pais, $anio, $fechaIni, $fechaFin, $precio, $material);
 
         // Mis propiedades las asigno con mis set; si fallan, valor por defecto
         // (15 para el peso y S01 para la serie, como pide el enunciado).

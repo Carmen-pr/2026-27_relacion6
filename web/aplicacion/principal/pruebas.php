@@ -90,7 +90,8 @@ function cuerpo()
         '01/01/1980',                                     // fin anterior al inicio: queda 31/12/2040
         5,                                                // precio menor de 30: queda 30
         1000,                                             // peso mayor de 300: queda 15
-        ''                                                // serie vacía: queda S01
+        '',                                               // serie vacía: queda S01
+        10
     );
     linea("Mueble con datos malos", $m);
 
@@ -148,6 +149,9 @@ function cuerpo()
     linea("setPorcentajeReciclado(150)", $r->setPorcentajeReciclado(150));
     linea("setPorcentajeReciclado(75)", $r->setPorcentajeReciclado(75));
 
+    linea("setMaterial(15)", $r->setMaterial(15));
+    linea("setMaterial('madera')", $r->setMaterial('madera'));
+
     // Los de MuebleTradicional los pruebo con $t
     linea("setPeso(10)", $t->setPeso(10));
     linea("setPeso(120.5)", $t->setPeso(120.5));
@@ -168,6 +172,7 @@ function cuerpo()
     linea("getPorcentajeReciclado", $r->getPorcentajeReciclado());
     linea("getPeso", $t->getPeso());
     linea("getSerie", $t->getSerie());
+    linea("getMaterial", $r->getMaterial());
 
     // ---------------------------------------------------------------
     // PRUEBA 7: cada hija tiene que devolver los nombres de sus propiedades extra.

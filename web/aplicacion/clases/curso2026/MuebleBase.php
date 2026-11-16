@@ -29,6 +29,7 @@ abstract class MuebleBase
     private string $fechaIniVenta;
     private string $fechaFinVenta;
     private float $precio;
+    private int $material;
 
     // Características extra del mueble (se crean dinámicamente)
     private Caracteristicas $caracteristicas;
@@ -46,7 +47,8 @@ abstract class MuebleBase
         int $anio = 2020,
         string $fechaIni = '01/01/2020',
         string $fechaFin = '31/12/2040',
-        float $precio = 30
+        float $precio = 30,
+        int $material = 10
     ) {
         // 1) Lo primero es mirar si todavía se pueden crear muebles.
         //    puedeCrear devuelve true/false y además rellena $quedan (no lo uso aquí).
@@ -71,6 +73,9 @@ abstract class MuebleBase
 
         if (!$this->setFechaFinVenta($fechaFin)) $this->setFechaFinVenta('31/12/2040');
         if (!$this->setPrecio($precio))          $this->setPrecio(30);
+
+        //set del enumerado Materiales
+        if (!$this->setMaterial($material)) $this->setMaterial(10);
 
         // Creo el objeto donde se guardarán las características
         $this->caracteristicas = new Caracteristicas();
@@ -230,6 +235,25 @@ abstract class MuebleBase
         return true;
     }
 
+
+    /**
+     * Material: por defecto se tendra el material de valor 10.
+     *  
+     */
+
+    public function setMaterial(mixed $material): bool
+    {
+        try {
+            if (!validaEntero($material, 5, 15, 10)) return false;
+        } catch (TypeError $e) {
+            return false;
+        }
+
+        $this->material = $material;
+        return true;
+    }
+
+
     // ===================== GET =====================
     // Solo devuelven el valor de la propiedad, sin validar nada.
 
@@ -260,6 +284,10 @@ abstract class MuebleBase
     public function getPrecio(): float
     {
         return $this->precio;
+    }
+    public function getMaterial(): int
+    {
+        return $this->material;
     }
 
     // ============ SIN SOBRECARGA DINÁMICA ============
@@ -342,8 +370,8 @@ abstract class MuebleBase
             . " con nombre {$this->nombre}, fabricante {$this->fabricante}"
             . ", fabricado en {$this->pais} a partir del año {$this->anio}"
             . ", vendido desde {$this->fechaIniVenta} hasta {$this->fechaFinVenta}"
-            . ", precio {$this->precio}";
-
+            . ", precio {$this->precio}"
+            . ", material {$this->material}";
         // Recorro las propiedades extra de la hija. Construyo el nombre del getter
         // ('get' + 'Peso' = 'getPeso') y lo llamo, así me sirve para cualquier hija.
         foreach ($this->damePropiedadesAdicionales() as $propiedad) {

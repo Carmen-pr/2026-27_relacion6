@@ -33,12 +33,13 @@ final class MuebleReciclado extends MuebleBase
         string $fechaIni = '01/01/2020',
         string $fechaFin = '31/12/2040',
         float $precio = 30,
-        int $porcentaje = 10
+        int $porcentaje = 10,
+        int $material = 10,
     ) {
         // Lo primero es llamar al constructor del padre, que se encarga de
         // todos los datos básicos (comprobar el máximo, validar el nombre,
         // poner valores por defecto y contar el mueble).
-        parent::__construct($nombre, $fabricante, $pais, $anio, $fechaIni, $fechaFin, $precio);
+        parent::__construct($nombre, $fabricante, $pais, $anio, $fechaIni, $fechaFin, $precio, $material);
 
         // Después asigno lo mío llamando al set, como pide el enunciado.
         // Si el set devuelve false (porcentaje no válido), pongo el valor por defecto, que es 10.

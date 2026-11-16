@@ -87,7 +87,7 @@ function tablaMuebles(array $muebles)
 {
     echo "<h2>Muebles de la tienda</h2>\n";
     echo "<table border=\"1\" cellpadding=\"4\">\n";
-    echo "<tr><th>Índice</th><th>Tipo</th><th>Nombre</th><th>Fabricante</th><th>País</th><th>Año</th><th>Precio</th></tr>\n";
+    echo "<tr><th>Índice</th><th>Tipo</th><th>Nombre</th><th>Fabricante</th><th>País</th><th>Año</th><th>Precio</th><th>Material</th></tr>\n";
 
     // $i es el índice del array (empieza en 1) y $m el mueble de esa posición
     foreach ($muebles as $i => $m) {
@@ -99,6 +99,7 @@ function tablaMuebles(array $muebles)
         echo "<td>" . htmlspecialchars($m->getPais()) . "</td>";
         echo "<td>" . $m->getAnio() . "</td>";
         echo "<td>" . $m->getPrecio() . " €</td>";
+        echo "<td>" . $m->getMaterial() . "</td>";
         echo "</tr>\n";
     }
 
@@ -156,6 +157,7 @@ function mostrarMueble(MuebleBase $mueble)
     linea("Inicio de venta", $mueble->getFechaIniVenta());
     linea("Fin de venta", $mueble->getFechaFinVenta());
     linea("Precio", $mueble->getPrecio() . " €");
+    linea("Material", $mueble->getMaterial());
 
     // Propiedades adicionales. No sé de antemano de qué tipo es el mueble, así que
     // se lo pregunto con damePropiedadesAdicionales(): me devuelve sus nombres

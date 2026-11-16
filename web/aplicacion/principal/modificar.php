@@ -83,6 +83,7 @@ function cuerpo(array $muebles)
         'fechaini'   => 'Inicio de venta (dd/mm/aaaa)',
         'fechafin'   => 'Fin de venta (dd/mm/aaaa)',
         'precio'     => 'Precio',
+        'material'   => 'Material'
     ];
 ?>
     <?php if (!$valido): ?>
@@ -102,6 +103,8 @@ function cuerpo(array $muebles)
         <p><b>Inicio de venta:</b> <?= $mueble->getFechaIniVenta() ?></p>
         <p><b>Fin de venta:</b> <?= $mueble->getFechaFinVenta() ?></p>
         <p><b>Precio:</b> <?= $mueble->getPrecio() ?> €</p>
+        <p><b>Materiales</b <?= $mueble->getMaterial() ?>></p>
+
         <?php foreach ($mueble->damePropiedadesAdicionales() as $propiedad): ?>
             <?php $get = 'get' . $propiedad; ?>
             <p><b><?= $propiedad ?>:</b> <?= htmlspecialchars((string) $mueble->$get()) ?></p>
@@ -179,7 +182,7 @@ function valoresFormulario(MuebleBase $mueble, bool $enviado): array
     $valores = [];
 
     if ($enviado) {
-        foreach (['nombre', 'fabricante', 'pais', 'anio', 'fechaini', 'fechafin', 'precio'] as $clave) {
+        foreach (['nombre', 'fabricante', 'pais', 'anio', 'fechaini', 'fechafin', 'precio', 'material'] as $clave) {
             $valores[$clave] = dato($clave);
         }
         foreach ($mueble->damePropiedadesAdicionales() as $propiedad) {
@@ -194,6 +197,8 @@ function valoresFormulario(MuebleBase $mueble, bool $enviado): array
             'fechaini'   => $mueble->getFechaIniVenta(),
             'fechafin'   => $mueble->getFechaFinVenta(),
             'precio'     => (string) $mueble->getPrecio(),
+            'material'   => $mueble->getMaterial(),
+
         ];
         foreach ($mueble->damePropiedadesAdicionales() as $propiedad) {
             $get = 'get' . $propiedad;
@@ -220,6 +225,7 @@ function validarDatos(MuebleBase $mueble): array
     // 1) Validación directa con condiciones sobre tipos/formatos básicos
     $anioRaw   = trim(dato('anio'));
     $precioRaw = str_replace(',', '.', trim(dato('precio')));
+    $materialRaw = trim(dato('material'));
     $fechaIni  = trim(dato('fechaini'));
     $fechaFin  = trim(dato('fechafin'));
 
@@ -229,6 +235,10 @@ function validarDatos(MuebleBase $mueble): array
 
     if ($precioRaw === '' || filter_var($precioRaw, FILTER_VALIDATE_FLOAT) === false) {
         $errores[] = "El precio debe ser un número válido.";
+    }
+
+    if ($materialRaw === '' || filter_var($materialRaw, FILTER_VALIDATE_INT) === false) {
+        $errores[] = "El material debe de ser un valor entero.";
     }
 
     if (!preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $fechaIni)) {
@@ -262,6 +272,10 @@ function validarDatos(MuebleBase $mueble): array
     }
     if (filter_var($precioRaw, FILTER_VALIDATE_FLOAT) !== false && !$auxiliar->setPrecio((float) $precioRaw)) {
         $errores[] = "El precio no es válido.";
+    }
+
+    if (filter_var($materialRaw, FILTER_VALIDATE_INT) !== false && !$auxiliar->setMaterial((int) $materialRaw)) {
+        $errores[] = "El entero no es correcto.";
     }
 
     // Validación de las propiedades propias de cada subclase (PorcentajeReciclado, Peso, etc.)
@@ -300,6 +314,7 @@ function actualizarMueble(MuebleBase $mueble): void
     $mueble->setFechaIniVenta(trim(dato('fechaini')));
     $mueble->setFechaFinVenta(trim(dato('fechafin')));
     $mueble->setPrecio((float) str_replace(',', '.', trim(dato('precio'))));
+    $mueble->setMaterial((int) trim(dato('material')));
 
     foreach ($mueble->damePropiedadesAdicionales() as $propiedad) {
         $set = 'set' . $propiedad;
